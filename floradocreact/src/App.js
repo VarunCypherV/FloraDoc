@@ -5,6 +5,7 @@ import Login from "./Pages/login";
 import Profile from "./Pages/profile";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AppointmentRoom from "./Pages/appointmentRoom";
+import Diagnosis from "./Pages/diagnosis";
 
 function App() {
   return (
@@ -17,7 +18,7 @@ function App() {
         <Route path="/profile" element={<Profile />} />
       </Routes>
     </BrowserRouter>
-    <AppointmentRoom/>
+    <Diagnosis/>
     </>
   );
 }
