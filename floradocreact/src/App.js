@@ -1,14 +1,22 @@
-import AppointmentRoom from './Pages/appointmentRoom';
-import Home from './Pages/home';
-import styled from "styled-components";
-
+import "./App.css";
+import Home from "./Pages/home";
+import Registration from "./Pages/register";
+import Login from "./Pages/login";
+import Profile from "./Pages/profile";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 function App() {
   return (
-    <div className="App">
-        <AppointmentRoom/>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/signup" element={<Registration />} />
+        <Route path="/signin" element={<Login />} />
+        <Route path="/profile" element={<Profile />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
 export default App;
+

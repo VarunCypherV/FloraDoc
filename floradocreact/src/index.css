@@ -1,13 +1,107 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;700&family=Raleway:wght@400;700&display=swap');
 body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: "Raleway", sans-serif;
+  font-weight: 400;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  height: 100vh;
+  margin: 0 15%;
+  gap: 4em;
+  width: auto !important;
+  color: var(--text);
+  scroll-behavior: smooth;
+  background-color: var(--background);
+
+  --h1: 48px;
+  --h2: 32px;
+  --subtitle: 24px;
+  --p: 18px;
+  --sub: 16px;
+  --small: 14px;
+
+  --text: #132301;
+  --background: #f1fee1;
+  --primary: #498604;
+  --secondary: #dffdba;
+  --accent: #7de308;
+  --image-grayscale: 0;
+  --image-opacity: 100%;
+}
+
+body.dark {
+  --text: #f1fee1;
+  --background: #132301;
+  --primary: #498604;
+  --secondary: #111e01;
+  --accent: #c6fb89;
+  --image-grayscale: 50%;
+  --image-opacity: 90%;
+}
+
+*{
+  box-sizing: border-box;
+  scroll-padding-top: 3em;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+img,
+video {
+  filter: grayscale(var(--image-grayscale)) opacity(var(--image-opacity));
+}
+
+.color-effect {
+  background: linear-gradient(120deg, var(--primary), var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+
+.primary-button {
+  padding: 1em 2em;
+  background-color: var(--primary);
+  color: var(--background);
+  border-radius: 1rem;
+  transition: transform ease 0.2s, box-shadow ease 0.2s;
+  display: inline-block;
+  font-size: 18px;
+  z-index: 2;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.primary-button:hover {
+  transform: translate(0, -3px);
+  box-shadow: 0 20px 80px -10px var(--primary);
+}
+
+
+.secondary-button {
+  padding: 1em 2em;
+  background-color: var(--secondary);
+  color: var(--text);
+  border-radius: 1rem;
+  display: inline-block;
+  font-size: 18px;
+  z-index: 1;
+  cursor: pointer;
+  transition: transform ease 0.2s;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.secondary-button:hover {
+  transform: translate(0, -3px);
+  transition: transform ease 0.2s;
+}
+
+::selection{
+  background-color: var(--accent);
 }
