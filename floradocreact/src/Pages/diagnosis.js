@@ -94,12 +94,12 @@ const Diagnosis = () => {
     setSnapshot(null);
     initCamera();
   };
-
+  
   useEffect(() => {
     const runObjectDetection = async () => {
       // Load your custom TensorFlow.js model
       console.log('Custom model going to load.');
-      const model = await tf.loadLayersModel('https://raw.githubusercontent.com/VarunCypherV/ObjectDetectionReactApp/main/model.json');
+      const model = await tf.loadLayersModel('https://raw.githubusercontent.com/VarunCypherV/FloraDoc/main/Model/model.json');
       console.log('Custom model loaded.');
 
       // If an image has been uploaded or a snapshot is available, proceed with detection
