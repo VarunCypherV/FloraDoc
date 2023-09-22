@@ -1,26 +1,55 @@
 import React, { useRef, useEffect, useState } from "react";
 import * as tf from "@tensorflow/tfjs";
-import { PDFDocument, rgb } from "pdf-lib";
+import axios from "axios";
+import PropTypes from "prop-types"; // Add prop type validation if not using TypeScript
 
 const Diagnosis = (props) => {
   const canvasRef = useRef(null);
-  const videoRef = useRef(null); // Added video reference
+  const videoRef = useRef(null);
   const [uploadedImage, setUploadedImage] = useState(null);
   const [predictionResult, setPredictionResult] = useState("");
   const [cameraStream, setCameraStream] = useState(null);
   const [showCamera, setShowCamera] = useState(false);
   const [snapshot, setSnapshot] = useState(null);
-  
+
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     const imageUrl = URL.createObjectURL(file);
     setUploadedImage(imageUrl);
     props.onImageUpload(imageUrl);
+    props.setDiagnosisImage(imageUrl);
   };
 
-  const handleConfirm = () => {
-    // Call the onConfirm function from the parent component
+  const sendPrelimPrediction = async () => {
+    try {
+      const formData = new FormData();
+      formData.append(
+        "diagnosis",
+        JSON.stringify({ disease_tag: predictionResult })
+      );
+      formData.append("image", uploadedImage);
+
+      const response = await axios.post(
+        "https://9dac-49-205-81-55.ngrok-free.app/prelim/",
+        formData,
+        {
+          headers: {
+            Authorization: `Token ${props.token}`,
+            "ngrok-skip-browser-warning": "69420",
+          },
+        }
+      );
+
+      // Handle the response, update state, or perform other actions as needed.
+    } catch (error) {
+      console.error("Error posting preliminary diagnosis:", error);
+    }
+  };
+
+  const handleConfirm = (e) => {
+    e.preventDefault();
     props.onConfirm(predictionResult);
+    sendPrelimPrediction();
   };
 
   const initCamera = async () => {
@@ -68,44 +97,39 @@ const Diagnosis = (props) => {
     initCamera();
   };
 
-
   useEffect(() => {
     const runObjectDetection = async () => {
       // Load your custom TensorFlow.js model
-
-      console.log('Custom model going to load.');
-      const model = await tf.loadLayersModel('https://raw.githubusercontent.com/VarunCypherV/FloraDoc/main/Model4/model.json');
-      console.log('Custom model loaded.');
-
+      const model = await tf.loadLayersModel(
+        "https://raw.githubusercontent.com/VarunCypherV/FloraDoc/main/Model6/model.json"
+      );
 
       // If an image has been uploaded or a snapshot is available, proceed with detection
       if (uploadedImage || snapshot) {
         // Load the image for prediction (either uploaded or snapshot)
         const img = new Image();
         img.src = uploadedImage || snapshot;
-      
+
         img.onload = async () => {
           // Ensure the image has the desired dimensions (256x256)
-
-          const canvas = document.createElement('canvas');
+          const canvas = document.createElement("canvas");
           canvas.width = 256;
           canvas.height = 256;
-          const ctx = canvas.getContext('2d');
+          const ctx = canvas.getContext("2d");
           ctx.drawImage(img, 0, 0, 256, 256);
-      
+
           // Convert the canvas to a TensorFlow tensor
           const tensor = tf.browser.fromPixels(canvas);
 
           // Normalize the pixel values to be between 0 and 1
           const normalizedImage = tensor.div(255.0);
-      
+
           // Expand dimensions to match the model's input shape
           const inputTensor = normalizedImage.expandDims(0);
-      
+
           // Make predictions
           const predictions = await model.predict(inputTensor).data();
-          console.log(predictions);
-          
+
           // Define the class labels
           const classLabels = ['Applehealthy',
           'Applerust',
@@ -156,8 +180,8 @@ const Diagnosis = (props) => {
           // Find the index with the highest probability
           const maxIndex = predictions.indexOf(Math.max(...predictions));
 
-    // Set the predicted class
-    setPredictionResult(classLabels[maxIndex]);
+          // Set the predicted class
+          setPredictionResult(classLabels[maxIndex]);
         };
       }
     };
@@ -172,7 +196,6 @@ const Diagnosis = (props) => {
 
   return (
     <div>
-
       <input type="file" accept="image/*" onChange={handleImageUpload} />
       {uploadedImage && (
         <img
@@ -218,7 +241,7 @@ const Diagnosis = (props) => {
       )}
       <button onClick={handleConfirm}>Confirm</button>
       <div>{predictionResult}</div>
-      
+
       <canvas
         ref={canvasRef}
         style={{
@@ -234,6 +257,13 @@ const Diagnosis = (props) => {
       />
     </div>
   );
+};
+
+Diagnosis.propTypes = {
+  onImageUpload: PropTypes.func.isRequired,
+  setDiagnosisImage: PropTypes.func.isRequired,
+  token: PropTypes.string.isRequired,
+  onConfirm: PropTypes.func.isRequired,
 };
 
 export default Diagnosis;
