@@ -98,7 +98,7 @@ const Diagnosis = () => {
       // Load your custom TensorFlow.js model
 
       console.log('Custom model going to load.');
-      const model = await tf.loadLayersModel('https://raw.githubusercontent.com/VarunCypherV/FloraDoc/main/Model4/model.json');
+      const model = await tf.loadLayersModel('https://raw.githubusercontent.com/VarunCypherV/FloraDoc/main/Model5/model.json');
       console.log('Custom model loaded.');
 
 
@@ -129,7 +129,7 @@ const Diagnosis = () => {
           // Make predictions
           const predictions = await model.predict(inputTensor).data();
           console.log(predictions);
-      
+          
           // Define the class labels
           const classLabels = ['Applehealthy',
           'Applerust',

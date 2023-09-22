@@ -21,6 +21,7 @@ function App() {
         <Route path="/appointment" element={<AppointmentRoom />} />
       </Routes>
     </BrowserRouter>
+    <Diagnosis/>
     </>
   );
 }
