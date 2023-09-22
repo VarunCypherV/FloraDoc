@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 import sign from "../Assets/sign.png";
 const SignupForm = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: "",
     password: "",
@@ -83,7 +84,7 @@ const SignupForm = () => {
         </form>
         <form className="entry">
           <img className="sign-img" src={sign} alt="signup-img" />
-          <a href="/signin">Already have an account?</a>
+          <a onClick={() => navigate('/signin')}>Already have an account?</a>
         </form>
       </div>
     </div>

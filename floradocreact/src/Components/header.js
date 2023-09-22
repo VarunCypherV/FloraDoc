@@ -32,9 +32,6 @@ const Header = () => {
     fetchdata();
   }, []);
 
-  const handleProfileClick = () => {
-    navigate("/profile");
-  };
   return (
     <HeaderContainer>
       <LogoContainer>
@@ -42,24 +39,24 @@ const Header = () => {
         Flora Doc
       </LogoContainer>
       <LinkContainer>
-        <Link href="/">Home</Link>
-        <Link href="/book">Services</Link>
-        <Link href="/">About</Link>
+        <Link onClick={() => navigate("/")}>Home</Link>
+        <Link onClick={() => navigate("/book")}>Services</Link>
+        <Link onClick={() => navigate("/")}>About</Link>
         {userData ? (
           <LinkContainer>
-            <Link onClick={handleProfileClick}>My Profile</Link>
-            <HeaderAvatar onClick={handleProfileClick}>
+            <Link onClick={() => navigate("/profile")}>My Profile</Link>
+            <HeaderAvatar onClick={() => navigate("/profile")}>
               {userData.user.username[0]}
             </HeaderAvatar>
           </LinkContainer>
         ) : (
-          <a
+          <div
             className="primary-button"
-            href="/signup"
+            onClick={() => navigate("/signup")}
             style={{ color: "var(--background)" }}
           >
             Sign Up
-          </a>
+          </div>
         )}
         <ThemeSwitch />
       </LinkContainer>
@@ -113,7 +110,8 @@ const LinkContainer = styled.div`
   align-items: center;
 `;
 
-const Link = styled.a`
+const Link = styled.div`
+  cursor: pointer;
   font-size: var(--sub);
   color: var(--text);
   width: 100%;

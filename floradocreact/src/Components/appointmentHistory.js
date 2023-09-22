@@ -1,11 +1,11 @@
-import React from 'react';
+import React from "react";
 
-const appointmentHistory = () => {
-    return (
-        <div>
-            
-        </div>
-    );
+const AppointmentHistory = () => {
+  return (
+    <div className="sign page-container">
+      <div className="card">Profile</div>
+    </div>
+  );
 };
 
-export default appointmentHistory;
+export default AppointmentHistory;
