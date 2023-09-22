@@ -29,9 +29,9 @@ const SignupForm = () => {
   };
 
   return (
-    <Sign className="page-container">
-      <Card>
-        <Entry onSubmit={handleSubmit}>
+    <div className="sign page-container">
+      <div className="card">
+        <form className="entry" onSubmit={handleSubmit}>
           <h2>Sign Up</h2>
           <input
             type="text"
@@ -76,70 +76,18 @@ const SignupForm = () => {
             <option value="expert">Expert</option>
           </select>
           <div>
-            <Button className="primary-button" type="submit">
+            <div className="primary-button" onClick={handleSubmit}>
               Register
-            </Button>
+            </div>
           </div>
-        </Entry>
-        <Entry>
-          <SignupImg src={sign} alt="signup-image" />
+        </form>
+        <form className="entry">
+          <img className="sign-img" src={sign} alt="signup-img" />
           <a href="/signin">Already have an account?</a>
-        </Entry>
-      </Card>
-    </Sign>
+        </form>
+      </div>
+    </div>
   );
 };
 
 export default SignupForm;
-
-const Sign = styled.div`
-  display: flex;
-  flex-direction: column;
-  color: black;
-  background-color: white;
-  padding: 2em;
-  border-radius: 1rem;
-  border: 1px solid rgb(0, 0, 0, 0.2);
-  box-shadow: 0 0 25px 0 rgba(0, 0, 0, 0.3);
-`;
-const Entry = styled.form`
-  justify-content: space-between;
-  display: flex;
-  flex-direction: column;
-  gap: 1em;
-  width: 50%;
-  padding: 1em;
-  a {
-    align-self: center;
-    color: black;
-    margin-bottom: 1em;
-    :hover {
-      color: var(--primary);
-    }
-  }
-  input,
-  select {
-    color: black;
-    background-color: transparent;
-    border: none;
-    border-bottom: 1px solid black;
-    padding: 0.5em;
-  }
-`;
-
-const Card = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: stretch;
-`;
-
-const SignupImg = styled.img`
-  padding: 2em;
-  object-fit: scale-down;
-  max-width: 100%;
-`;
-
-const Button = styled.div`
-  justify-content: center;
-`;
