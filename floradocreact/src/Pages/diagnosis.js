@@ -115,13 +115,58 @@ const Diagnosis = () => {
           const normalizedImage = resizedImage.div(255.0);
 
           // Expand dimensions to match the model's input shape
-          const inputTensor = normalizedImage.expandDims(0);
+          // const inputTensor = normalizedImage.expandDims(0);
 
           // Make predictions
-          const predictions = await model.predict(inputTensor).data();
+          const predictions = await model.predict(normalizedImage).data();
+          console.log(predictions);
 
           // Define the class labels
-          const classLabels = ['buildings', 'forest', 'glacier', 'mountain', 'sea', 'street'];
+          const classLabels = ['Applehealthy',
+          'Applerust',
+          'Applescab',
+          'Apple_black_rot',
+          'Corncommon_rust',
+          'Corngray_leaf_spot',
+          'Cornhealthy',
+          'Cornnorthern_leaf_blight',
+          'Grapeblack_measles',
+          'Grapeblack_rot',
+          'Grapehealthy',
+          'Grapeleaf_blight',
+          'Potatoearly_blight',
+          'Potatohealthy',
+          'Potatolate_blight',
+          'Ricebrown_spot',
+          'Ricehispa',
+          'Riceleaf_blast',
+          'Riceneck_blast',
+          'Rice_healthy',
+          'Sugarcanebacterial_blight',
+          'Sugarcanehealthy',
+          'Sugarcanered_rot',
+          'Sugarcanered_stripe',
+          'Sugarcanerust',
+          'Teaalgal_leaf',
+          'Teaanthracnose',
+          'Teabird_eye_spot',
+          'Teabrown_blight',
+          'Teahealthy',
+          'Teared_leaf_spot',
+          'Tomatobacterial_spot',
+          'Tomatoearly_blight',
+          'Tomatohealthy',
+          'Tomatolate_blight',
+          'Tomatoleaf_mold',
+          'Tomatomosaic_virus',
+          'Tomatoseptoria_leaf_spot',
+          'Tomatospider_mites',
+          'Tomatotarget_spot',
+          'Tomatoyellow_leaf_curl_virus',
+          'Wheatbrown_rust',
+          'Wheathealthy',
+          'Wheatseptoria',
+          'Wheat__yellow_rust'];
 
           // Find the index with the highest probability
           const maxIndex = predictions.indexOf(Math.max(...predictions));
