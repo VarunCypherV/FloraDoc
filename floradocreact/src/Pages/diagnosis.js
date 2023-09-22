@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState } from "react";
 import * as tf from "@tensorflow/tfjs";
 import { PDFDocument, rgb } from "pdf-lib";
 
-const Diagnosis = () => {
+const Diagnosis = (props) => {
   const canvasRef = useRef(null);
   const videoRef = useRef(null); // Added video reference
   const [uploadedImage, setUploadedImage] = useState(null);
@@ -10,42 +10,17 @@ const Diagnosis = () => {
   const [cameraStream, setCameraStream] = useState(null);
   const [showCamera, setShowCamera] = useState(false);
   const [snapshot, setSnapshot] = useState(null);
-
-  const generatePDF = async () => {
-    const pdfDoc = await PDFDocument.create();
-    const page = pdfDoc.addPage([300, 200]); // Customize the page size as needed
-    const { width, height } = page.getSize();
-
-    const fontSize = 20;
-    const x = 50;
-    const y = height - 50;
-    console.log(predictionResult);
-    page.drawText(`${predictionResult}`, {
-      x,
-      y,
-      size: fontSize,
-      color: rgb(0, 0, 0), // Black color
-    });
-
-    const pdfBytes = await pdfDoc.save();
-
-    // Create a Blob from the PDF data
-    const pdfBlob = new Blob([pdfBytes], { type: "application/pdf" });
-
-    // Create a URL for the Blob
-    const pdfUrl = URL.createObjectURL(pdfBlob);
-
-    // Create an anchor element to trigger the download
-    const downloadLink = document.createElement("a");
-    downloadLink.href = pdfUrl;
-    downloadLink.download = "prediction.pdf";
-    downloadLink.click();
-  };
-
+  
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     const imageUrl = URL.createObjectURL(file);
     setUploadedImage(imageUrl);
+    props.onImageUpload(imageUrl);
+  };
+
+  const handleConfirm = () => {
+    // Call the onConfirm function from the parent component
+    props.onConfirm(predictionResult);
   };
 
   const initCamera = async () => {
@@ -92,13 +67,14 @@ const Diagnosis = () => {
     setSnapshot(null);
     initCamera();
   };
-  
+
+
   useEffect(() => {
     const runObjectDetection = async () => {
       // Load your custom TensorFlow.js model
 
       console.log('Custom model going to load.');
-      const model = await tf.loadLayersModel('https://raw.githubusercontent.com/VarunCypherV/FloraDoc/main/Model5/model.json');
+      const model = await tf.loadLayersModel('https://raw.githubusercontent.com/VarunCypherV/FloraDoc/main/Model4/model.json');
       console.log('Custom model loaded.');
 
 
@@ -181,7 +157,7 @@ const Diagnosis = () => {
           const maxIndex = predictions.indexOf(Math.max(...predictions));
 
     // Set the predicted class
-    setPredictionResult('Predicted Class: ' + classLabels[maxIndex]);
+    setPredictionResult(classLabels[maxIndex]);
         };
       }
     };
@@ -196,6 +172,7 @@ const Diagnosis = () => {
 
   return (
     <div>
+
       <input type="file" accept="image/*" onChange={handleImageUpload} />
       {uploadedImage && (
         <img
@@ -239,9 +216,9 @@ const Diagnosis = () => {
           <button onClick={retakeSnapshot}>Retake</button>
         </div>
       )}
-
+      <button onClick={handleConfirm}>Confirm</button>
       <div>{predictionResult}</div>
-      <button onClick={generatePDF}>Generate PDF</button>
+      
       <canvas
         ref={canvasRef}
         style={{
