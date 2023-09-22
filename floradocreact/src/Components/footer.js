@@ -42,7 +42,7 @@ const FooterContainer = styled.div`
   background-color: var(--text);
   color: var(--background);
   padding: 3em 5em;
-  margin-bottom: 10em;
+  margin-bottom: 2em;
 `;
 
 const LogoContainer = styled.div`

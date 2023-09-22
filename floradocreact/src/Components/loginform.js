@@ -1,19 +1,18 @@
 import React, { useEffect, useState } from "react";
-import "./loginform.css";
-import GoogleLogin from "react-google-login";
-import { gapi } from "gapi-script";
-
+// import "./loginform.css";
+// import GoogleLogin from "react-google-login";
+// import { gapi } from 'gapi-script';
 const Loginform = () => {
 
-    useEffect(() => {
-        function start() {
-            gapi.client.init({
-                clientId: "79474543031-tmjo35916ufn421ej3u1i2ljao2apr4s.apps.googleusercontent.com",
-                scope: ""
-            })
-        }
-        gapi.load('client: auth2', start)
-    })
+    // useEffect(() => {
+    //     function start() {
+    //         gapi.client.init({
+    //             clientId: "79474543031-tmjo35916ufn421ej3u1i2ljao2apr4s.apps.googleusercontent.com",
+    //             scope: ""
+    //         })
+    //     }
+    //     gapi.load('client: auth2', start)
+    // })
 
   const [popupStyle, showPopup] = useState("hide");
 
@@ -55,7 +54,7 @@ const Loginform = () => {
       <div className="alt-login">
         <div className="facebook"></div>
         <div className="google">
-          <GoogleLogin
+          {/* <GoogleLogin
             className="blue"
             clientId="79474543031-tmjo35916ufn421ej3u1i2ljao2apr4s.apps.googleusercontent.com"
             buttonText=""
@@ -65,7 +64,7 @@ const Loginform = () => {
             isSignedIn={false}
             icon={false}
             theme="dark"
-          />
+          /> */}
         </div>
       </div>
 

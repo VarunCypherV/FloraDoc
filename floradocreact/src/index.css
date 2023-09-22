@@ -23,6 +23,7 @@ body {
   --sub: 16px;
   --small: 14px;
 
+  --offwhite: #FAF9F6;
   --text: #132301;
   --background: #f1fee1;
   --primary: #498604;
@@ -104,4 +105,22 @@ video {
 
 ::selection{
   background-color: var(--accent);
+}
+
+.page-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin: 3em 0 6em 0;
+}
+
+.cards-container{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2em;
+  width: 100%;
+  align-items: center;
+  margin-bottom: 6em;
 }

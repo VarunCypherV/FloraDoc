@@ -26,7 +26,7 @@ function Home() {
         </HeroText>
         <HeroImg src={hero} alt="hero" />
       </HeroContainer>
-      <CardsContainer>
+      <div className="cards-container">
         <h2>
           Why <span className="color-effect">FloraDoc</span>?
         </h2>
@@ -59,7 +59,7 @@ function Home() {
             <CardBg />
           </Card>
         </Cards>
-      </CardsContainer>
+      </div>
       <Footer />
     </>
   );
@@ -105,16 +105,6 @@ const ButtonContainer = styled.div`
   flex-direction: row;
   gap: 1em;
   flex-wrap: wrap;
-`;
-
-const CardsContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 2em;
-  width: 100%;
-  align-items: center;
-  margin-bottom: 6em;
 `;
 
 const Cards = styled.div`

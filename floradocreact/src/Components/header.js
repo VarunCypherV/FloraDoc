@@ -13,7 +13,7 @@ const header = () => {
       </LogoContainer>
       <LinkContainer>
         <Link href="/">Home</Link>
-        <Link href="/">Services</Link>
+        <Link href="/book">Services</Link>
         <Link href="/">About</Link>
         {user !== null ? (
           <>
