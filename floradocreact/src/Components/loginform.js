@@ -1,7 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios"; // Import Axios
+import { useAuth } from '../Context/AuthContext';
+import { useNavigate } from "react-router-dom"
 
 const Loginform = () => {
+  const { login } = useAuth();
+  const navigate = useNavigate()
   const [popupStyle, showPopup] = useState("hide");
 
   const [formData, setFormData] = useState({
@@ -12,20 +17,22 @@ const Loginform = () => {
 
   const handleLogin = async () => {
     try {
-      const response = await fetch("/api/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
+      const response = await axios.post("https://9dac-49-205-81-55.ngrok-free.app/api-token-auth/", {
+        username: formData.username,
+        password: formData.password,
       });
 
-      if (response.ok) {
-        // Update login status if successful
+      if (response.status === 200) {
+        const token  = response.data.token;
+        login(token);
         setFormData({ ...formData, loginStatus: "Login Successful" });
+        navigate("/book")
+        console.log(token);
+
+
       } else {
-        // Update login status if login fails
         setFormData({ ...formData, loginStatus: "Login Failed" });
+        
       }
     } catch (error) {
       console.error("Login error:", error);
@@ -43,7 +50,7 @@ const Loginform = () => {
   };
 
   const onFailure = (e) => {
-    alert("User sign in Failed");
+    alert("User sign-in Failed");
     console.log(e);
   };
 
@@ -54,12 +61,22 @@ const Loginform = () => {
   return (
     <div className="cover">
       <h1>Login</h1>
-      <input type="text" placeholder="Username" />
-      <input type="password" placeholder="Password" />
+      <input
+        type="text"
+        placeholder="Username"
+        value={formData.username}
+        onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+      />
+      <input
+        type="password"
+        placeholder="Password"
+        value={formData.password}
+        onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+      />
 
-      <div className="login-btn" onClick={handleLogin}>
+      <button className="login-btn" onClick={handleLogin}>
         {formData.loginStatus || "Login"}
-      </div>
+      </button>
 
       <div className="additional-options">
         <span>
