@@ -92,59 +92,38 @@ const Diagnosis = () => {
     setSnapshot(null);
     initCamera();
   };
-  
+
   useEffect(() => {
     const runObjectDetection = async () => {
       // Load your custom TensorFlow.js model
-<<<<<<< HEAD
       console.log("Custom model going to load.");
       const model = await tf.loadLayersModel(
         "https://raw.githubusercontent.com/VarunCypherV/ObjectDetectionReactApp/main/model.json"
       );
       console.log("Custom model loaded.");
-=======
-      console.log('Custom model going to load.');
-      const model = await tf.loadLayersModel('https://raw.githubusercontent.com/VarunCypherV/FloraDoc/main/Model3/model.json');
-      console.log('Custom model loaded.');
->>>>>>> fbda6bb0f85f6a9a96e7a3f6f324e4a27fa6eb06
 
       // If an image has been uploaded or a snapshot is available, proceed with detection
       if (uploadedImage || snapshot) {
         // Load the image for prediction (either uploaded or snapshot)
         const img = new Image();
         img.src = uploadedImage || snapshot;
-      
         img.onload = async () => {
           // Ensure the image has the desired dimensions (256x256)
-<<<<<<< HEAD
           const resizedImage = tf.image.resizeBilinear(
             tf.browser.fromPixels(img),
             [256, 256]
           );
 
-=======
-          const canvas = document.createElement('canvas');
-          canvas.width = 256;
-          canvas.height = 256;
-          const ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0, 256, 256);
-      
-          // Convert the canvas to a TensorFlow tensor
-          const tensor = tf.browser.fromPixels(canvas);
-      
->>>>>>> fbda6bb0f85f6a9a96e7a3f6f324e4a27fa6eb06
           // Normalize the pixel values to be between 0 and 1
-          const normalizedImage = tensor.div(255.0);
-      
+          const normalizedImage = resizedImage.div(255.0);
+
           // Expand dimensions to match the model's input shape
           const inputTensor = normalizedImage.expandDims(0);
-      
+
           // Make predictions
           const predictions = await model.predict(inputTensor).data();
-          console.log(predictions);
-      
+
           // Define the class labels
-<<<<<<< HEAD
           const classLabels = [
             "buildings",
             "forest",
@@ -153,64 +132,12 @@ const Diagnosis = () => {
             "sea",
             "street",
           ];
-=======
-          const classLabels = ['Applehealthy',
-          'Applerust',
-          'Applescab',
-          'Apple_black_rot',
-          'Corncommon_rust',
-          'Corngray_leaf_spot',
-          'Cornhealthy',
-          'Cornnorthern_leaf_blight',
-          'Grapeblack_measles',
-          'Grapeblack_rot',
-          'Grapehealthy',
-          'Grapeleaf_blight',
-          'Potatoearly_blight',
-          'Potatohealthy',
-          'Potatolate_blight',
-          'Ricebrown_spot',
-          'Ricehispa',
-          'Riceleaf_blast',
-          'Riceneck_blast',
-          'Rice_healthy',
-          'Sugarcanebacterial_blight',
-          'Sugarcanehealthy',
-          'Sugarcanered_rot',
-          'Sugarcanered_stripe',
-          'Sugarcanerust',
-          'Teaalgal_leaf',
-          'Teaanthracnose',
-          'Teabird_eye_spot',
-          'Teabrown_blight',
-          'Teahealthy',
-          'Teared_leaf_spot',
-          'Tomatobacterial_spot',
-          'Tomatoearly_blight',
-          'Tomatohealthy',
-          'Tomatolate_blight',
-          'Tomatoleaf_mold',
-          'Tomatomosaic_virus',
-          'Tomatoseptoria_leaf_spot',
-          'Tomatospider_mites',
-          'Tomatotarget_spot',
-          'Tomatoyellow_leaf_curl_virus',
-          'Wheatbrown_rust',
-          'Wheathealthy',
-          'Wheatseptoria',
-          'Wheat__yellow_rust'];
->>>>>>> fbda6bb0f85f6a9a96e7a3f6f324e4a27fa6eb06
 
           // Find the index with the highest probability
           const maxIndex = predictions.indexOf(Math.max(...predictions));
 
-<<<<<<< HEAD
           // Set the predicted class
           setPredictionResult("Predicted Class: " + classLabels[maxIndex]);
-=======
-    // Set the predicted class
-    setPredictionResult('Predicted Class: ' + classLabels[maxIndex]);
->>>>>>> fbda6bb0f85f6a9a96e7a3f6f324e4a27fa6eb06
         };
       }
     };

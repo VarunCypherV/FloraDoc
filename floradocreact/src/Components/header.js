@@ -2,7 +2,7 @@ import { Avatar } from "@mui/material";
 import React from "react";
 import styled from "styled-components";
 import logo from "../Assets/logo.png";
-
+import ThemeSwitch from "./themeswitch";
 const header = () => {
   const user = null;
   return (
@@ -31,6 +31,7 @@ const header = () => {
             Sign Up
           </a>
         )}
+        <ThemeSwitch />
       </LinkContainer>
     </HeaderContainer>
   );
