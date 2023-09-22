@@ -1,13 +1,12 @@
-import React, { useRef, useEffect, useState } from 'react';
-import * as tf from '@tensorflow/tfjs';
-import { PDFDocument, rgb } from 'pdf-lib';
-
+import React, { useRef, useEffect, useState } from "react";
+import * as tf from "@tensorflow/tfjs";
+import { PDFDocument, rgb } from "pdf-lib";
 
 const Diagnosis = () => {
   const canvasRef = useRef(null);
   const videoRef = useRef(null); // Added video reference
   const [uploadedImage, setUploadedImage] = useState(null);
-  const [predictionResult, setPredictionResult] = useState('');
+  const [predictionResult, setPredictionResult] = useState("");
   const [cameraStream, setCameraStream] = useState(null);
   const [showCamera, setShowCamera] = useState(false);
   const [snapshot, setSnapshot] = useState(null);
@@ -16,7 +15,7 @@ const Diagnosis = () => {
     const pdfDoc = await PDFDocument.create();
     const page = pdfDoc.addPage([300, 200]); // Customize the page size as needed
     const { width, height } = page.getSize();
-  
+
     const fontSize = 20;
     const x = 50;
     const y = height - 50;
@@ -27,23 +26,22 @@ const Diagnosis = () => {
       size: fontSize,
       color: rgb(0, 0, 0), // Black color
     });
-  
+
     const pdfBytes = await pdfDoc.save();
-  
+
     // Create a Blob from the PDF data
-    const pdfBlob = new Blob([pdfBytes], { type: 'application/pdf' });
-  
+    const pdfBlob = new Blob([pdfBytes], { type: "application/pdf" });
+
     // Create a URL for the Blob
     const pdfUrl = URL.createObjectURL(pdfBlob);
-  
+
     // Create an anchor element to trigger the download
-    const downloadLink = document.createElement('a');
+    const downloadLink = document.createElement("a");
     downloadLink.href = pdfUrl;
-    downloadLink.download = 'prediction.pdf';
+    downloadLink.download = "prediction.pdf";
     downloadLink.click();
   };
 
-  
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     const imageUrl = URL.createObjectURL(file);
@@ -61,7 +59,7 @@ const Diagnosis = () => {
         videoRef.current.play();
       }
     } catch (error) {
-      console.error('Error opening camera:', error);
+      console.error("Error opening camera:", error);
     }
   };
 
@@ -85,7 +83,7 @@ const Diagnosis = () => {
       setUploadedImage(imageUrl);
 
       if (videoRef.current) {
-        videoRef.current.style.display = 'none';
+        videoRef.current.style.display = "none";
       }
     }
   };
@@ -98,9 +96,17 @@ const Diagnosis = () => {
   useEffect(() => {
     const runObjectDetection = async () => {
       // Load your custom TensorFlow.js model
+<<<<<<< HEAD
+      console.log("Custom model going to load.");
+      const model = await tf.loadLayersModel(
+        "https://raw.githubusercontent.com/VarunCypherV/ObjectDetectionReactApp/main/model.json"
+      );
+      console.log("Custom model loaded.");
+=======
       console.log('Custom model going to load.');
       const model = await tf.loadLayersModel('https://raw.githubusercontent.com/VarunCypherV/FloraDoc/main/Model4/model.json');
       console.log('Custom model loaded.');
+>>>>>>> fbda6bb0f85f6a9a96e7a3f6f324e4a27fa6eb06
 
       // If an image has been uploaded or a snapshot is available, proceed with detection
       if (uploadedImage || snapshot) {
@@ -110,6 +116,13 @@ const Diagnosis = () => {
       
         img.onload = async () => {
           // Ensure the image has the desired dimensions (256x256)
+<<<<<<< HEAD
+          const resizedImage = tf.image.resizeBilinear(
+            tf.browser.fromPixels(img),
+            [256, 256]
+          );
+
+=======
           const canvas = document.createElement('canvas');
           canvas.width = 256;
           canvas.height = 256;
@@ -119,6 +132,7 @@ const Diagnosis = () => {
           // Convert the canvas to a TensorFlow tensor
           const tensor = tf.browser.fromPixels(canvas);
       
+>>>>>>> fbda6bb0f85f6a9a96e7a3f6f324e4a27fa6eb06
           // Normalize the pixel values to be between 0 and 1
           const normalizedImage = tensor.div(255.0);
       
@@ -130,6 +144,16 @@ const Diagnosis = () => {
           console.log(predictions);
       
           // Define the class labels
+<<<<<<< HEAD
+          const classLabels = [
+            "buildings",
+            "forest",
+            "glacier",
+            "mountain",
+            "sea",
+            "street",
+          ];
+=======
           const classLabels = ['Applehealthy',
           'Applerust',
           'Applescab',
@@ -175,12 +199,18 @@ const Diagnosis = () => {
           'Wheathealthy',
           'Wheatseptoria',
           'Wheat__yellow_rust'];
+>>>>>>> fbda6bb0f85f6a9a96e7a3f6f324e4a27fa6eb06
 
           // Find the index with the highest probability
           const maxIndex = predictions.indexOf(Math.max(...predictions));
 
+<<<<<<< HEAD
+          // Set the predicted class
+          setPredictionResult("Predicted Class: " + classLabels[maxIndex]);
+=======
     // Set the predicted class
     setPredictionResult('Predicted Class: ' + classLabels[maxIndex]);
+>>>>>>> fbda6bb0f85f6a9a96e7a3f6f324e4a27fa6eb06
         };
       }
     };
@@ -196,7 +226,13 @@ const Diagnosis = () => {
   return (
     <div>
       <input type="file" accept="image/*" onChange={handleImageUpload} />
-      {uploadedImage && <img src={uploadedImage} alt="Uploaded" style={{ maxWidth: '100%', maxHeight: '300px' }} />}
+      {uploadedImage && (
+        <img
+          src={uploadedImage}
+          alt="Uploaded"
+          style={{ maxWidth: "100%", maxHeight: "300px" }}
+        />
+      )}
 
       {/* Camera Controls */}
       {showCamera ? (
@@ -211,7 +247,11 @@ const Diagnosis = () => {
       {/* Live Camera Preview */}
       <video
         ref={videoRef}
-        style={{ maxWidth: '100%', maxHeight: '300px', display: showCamera ? 'block' : 'none' }}
+        style={{
+          maxWidth: "100%",
+          maxHeight: "300px",
+          display: showCamera ? "block" : "none",
+        }}
         autoPlay
         playsInline
         muted
@@ -220,7 +260,11 @@ const Diagnosis = () => {
       {/* Display Snapshot */}
       {snapshot && (
         <div>
-          <img src={snapshot} alt="Snapshot" style={{ maxWidth: '100%', maxHeight: '300px' }} />
+          <img
+            src={snapshot}
+            alt="Snapshot"
+            style={{ maxWidth: "100%", maxHeight: "300px" }}
+          />
           <button onClick={retakeSnapshot}>Retake</button>
         </div>
       )}
