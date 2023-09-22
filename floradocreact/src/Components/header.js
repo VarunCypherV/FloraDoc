@@ -1,10 +1,40 @@
 import { Avatar } from "@mui/material";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import logo from "../Assets/logo.png";
 import ThemeSwitch from "./themeswitch";
-const header = () => {
-  const user = null;
+import axios from "axios";
+import { useAuth } from "../Context/AuthContext";
+import { useNavigate } from "react-router-dom";
+const Header = () => {
+  const navigate = useNavigate();
+  const { token } = useAuth();
+  const [userData, setUserData] = useState(null);
+  const fetchdata = async () => {
+    try {
+      const response = await axios.get(
+        "https://9dac-49-205-81-55.ngrok-free.app/getuser/",
+        {
+          headers: {
+            Authorization: `Token ${token}`,
+            "ngrok-skip-browser-warning": "69420",
+          },
+        }
+      );
+
+      setUserData(response.data[0]);
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchdata();
+  }, []);
+
+  const handleProfileClick = () => {
+    navigate("/profile");
+  };
   return (
     <HeaderContainer>
       <LogoContainer>
@@ -15,13 +45,13 @@ const header = () => {
         <Link href="/">Home</Link>
         <Link href="/book">Services</Link>
         <Link href="/">About</Link>
-        {user !== null ? (
-          <>
-            <Link href="/profile">My Profile</Link>
-            <a href="/profile">
-              <HeaderAvatar />
-            </a>
-          </>
+        {userData ? (
+          <LinkContainer>
+            <Link onClick={handleProfileClick}>My Profile</Link>
+            <HeaderAvatar onClick={handleProfileClick}>
+              {userData.user.username[0]}
+            </HeaderAvatar>
+          </LinkContainer>
         ) : (
           <a
             className="primary-button"
@@ -37,7 +67,7 @@ const header = () => {
   );
 };
 
-export default header;
+export default Header;
 
 const HeaderContainer = styled.div`
   font-family: "Montserrat", sans-serif;
