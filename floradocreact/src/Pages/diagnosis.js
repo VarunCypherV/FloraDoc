@@ -96,17 +96,11 @@ const Diagnosis = () => {
   useEffect(() => {
     const runObjectDetection = async () => {
       // Load your custom TensorFlow.js model
-<<<<<<< HEAD
-      console.log("Custom model going to load.");
-      const model = await tf.loadLayersModel(
-        "https://raw.githubusercontent.com/VarunCypherV/ObjectDetectionReactApp/main/model.json"
-      );
-      console.log("Custom model loaded.");
-=======
+
       console.log('Custom model going to load.');
       const model = await tf.loadLayersModel('https://raw.githubusercontent.com/VarunCypherV/FloraDoc/main/Model4/model.json');
       console.log('Custom model loaded.');
->>>>>>> fbda6bb0f85f6a9a96e7a3f6f324e4a27fa6eb06
+
 
       // If an image has been uploaded or a snapshot is available, proceed with detection
       if (uploadedImage || snapshot) {
@@ -116,13 +110,7 @@ const Diagnosis = () => {
       
         img.onload = async () => {
           // Ensure the image has the desired dimensions (256x256)
-<<<<<<< HEAD
-          const resizedImage = tf.image.resizeBilinear(
-            tf.browser.fromPixels(img),
-            [256, 256]
-          );
 
-=======
           const canvas = document.createElement('canvas');
           canvas.width = 256;
           canvas.height = 256;
@@ -131,8 +119,7 @@ const Diagnosis = () => {
       
           // Convert the canvas to a TensorFlow tensor
           const tensor = tf.browser.fromPixels(canvas);
-      
->>>>>>> fbda6bb0f85f6a9a96e7a3f6f324e4a27fa6eb06
+
           // Normalize the pixel values to be between 0 and 1
           const normalizedImage = tensor.div(255.0);
       
@@ -144,16 +131,6 @@ const Diagnosis = () => {
           console.log(predictions);
       
           // Define the class labels
-<<<<<<< HEAD
-          const classLabels = [
-            "buildings",
-            "forest",
-            "glacier",
-            "mountain",
-            "sea",
-            "street",
-          ];
-=======
           const classLabels = ['Applehealthy',
           'Applerust',
           'Applescab',
@@ -199,18 +176,12 @@ const Diagnosis = () => {
           'Wheathealthy',
           'Wheatseptoria',
           'Wheat__yellow_rust'];
->>>>>>> fbda6bb0f85f6a9a96e7a3f6f324e4a27fa6eb06
 
           // Find the index with the highest probability
           const maxIndex = predictions.indexOf(Math.max(...predictions));
 
-<<<<<<< HEAD
-          // Set the predicted class
-          setPredictionResult("Predicted Class: " + classLabels[maxIndex]);
-=======
     // Set the predicted class
     setPredictionResult('Predicted Class: ' + classLabels[maxIndex]);
->>>>>>> fbda6bb0f85f6a9a96e7a3f6f324e4a27fa6eb06
         };
       }
     };
