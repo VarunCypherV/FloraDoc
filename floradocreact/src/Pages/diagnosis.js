@@ -99,7 +99,7 @@ const Diagnosis = () => {
     const runObjectDetection = async () => {
       // Load your custom TensorFlow.js model
       console.log('Custom model going to load.');
-      const model = await tf.loadLayersModel('https://raw.githubusercontent.com/VarunCypherV/FloraDoc/main/Model2/model.json');
+      const model = await tf.loadLayersModel('https://raw.githubusercontent.com/VarunCypherV/FloraDoc/main/Model3/model.json');
       console.log('Custom model loaded.');
 
       // If an image has been uploaded or a snapshot is available, proceed with detection
@@ -107,20 +107,28 @@ const Diagnosis = () => {
         // Load the image for prediction (either uploaded or snapshot)
         const img = new Image();
         img.src = uploadedImage || snapshot;
+      
         img.onload = async () => {
           // Ensure the image has the desired dimensions (256x256)
-          const resizedImage = tf.image.resizeBilinear(tf.browser.fromPixels(img), [5,256, 256]);
-
+          const canvas = document.createElement('canvas');
+          canvas.width = 256;
+          canvas.height = 256;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, 256, 256);
+      
+          // Convert the canvas to a TensorFlow tensor
+          const tensor = tf.browser.fromPixels(canvas);
+      
           // Normalize the pixel values to be between 0 and 1
-          const normalizedImage = resizedImage.div(255.0);
-
+          const normalizedImage = tensor.div(255.0);
+      
           // Expand dimensions to match the model's input shape
-          // const inputTensor = normalizedImage.expandDims(0);
-
+          const inputTensor = normalizedImage.expandDims(0);
+      
           // Make predictions
-          const predictions = await model.predict(normalizedImage).data();
+          const predictions = await model.predict(inputTensor).data();
           console.log(predictions);
-
+      
           // Define the class labels
           const classLabels = ['Applehealthy',
           'Applerust',
@@ -171,8 +179,8 @@ const Diagnosis = () => {
           // Find the index with the highest probability
           const maxIndex = predictions.indexOf(Math.max(...predictions));
 
-          // Set the predicted class
-          setPredictionResult('Predicted Class: ' + classLabels[maxIndex]);
+    // Set the predicted class
+    setPredictionResult('Predicted Class: ' + classLabels[maxIndex]);
         };
       }
     };
