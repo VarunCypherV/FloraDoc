@@ -99,7 +99,7 @@ const Diagnosis = () => {
     const runObjectDetection = async () => {
       // Load your custom TensorFlow.js model
       console.log('Custom model going to load.');
-      const model = await tf.loadLayersModel('https://raw.githubusercontent.com/VarunCypherV/FloraDoc/main/Model/model.json');
+      const model = await tf.loadLayersModel('https://raw.githubusercontent.com/VarunCypherV/LivePreviewObjectDetectionReactApp/main/model/waste/model.json');
       console.log('Custom model loaded.');
 
       // If an image has been uploaded or a snapshot is available, proceed with detection
@@ -115,10 +115,10 @@ const Diagnosis = () => {
           const normalizedImage = resizedImage.div(255.0);
 
           // Expand dimensions to match the model's input shape
-          // const inputTensor = normalizedImage.expandDims(0);
+          const inputTensor = normalizedImage.expandDims(0);
 
           // Make predictions
-          const predictions = await model.predict(normalizedImage).data();
+          const predictions = await model.predict(inputTensor).data();
           console.log(predictions);
 
           // Define the class labels
