@@ -2,8 +2,6 @@ import React, { useRef, useEffect, useState } from "react";
 import * as tf from "@tensorflow/tfjs";
 import axios from "axios";
 import { useAuth } from "../Context/AuthContext";
-import Header from "../Components/header";
-import Footer from "../Components/footer";
 
 const Diagnosis = () => {
   const { token } = useAuth();
@@ -14,102 +12,54 @@ const Diagnosis = () => {
   const [cameraStream, setCameraStream] = useState(null);
   const [showCamera, setShowCamera] = useState(false);
   const [snapshot, setSnapshot] = useState(null);
-
+  const [isPredicting, setIsPredicting] = useState(false);
+  const [imageURL, setimageURL] = useState("");
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
+    setUploadedImage(file);
+
     const imageUrl = URL.createObjectURL(file);
 
-    setUploadedImage(imageUrl);
+    setimageURL(imageUrl);
   };
 
   const PrelimPredic = async () => {
     try {
       console.log(token);
+      console.log(predictionResult);
 
-      const requestData = {
-        diagnosis: {
-          disease_tag: predictionResult,
-        },
-        // Add other JSON data fields as needed
-        // field_name: field_value,
-      };
+      const formdatadiag = new FormData();
+      formdatadiag.append("diagnosis.disease_tag", predictionResult);
+      formdatadiag.append("image", uploadedImage);
 
       const headers = {
         Authorization: `Token ${token}`,
         "ngrok-skip-browser-warning": "69420",
-        "Content-Encoding": "gzip, deflate, br",
-        "Content-type":
-          "multipart/form-data; boundary=----WebKitFormBoundaryD5jeZoBNqMSjAUUy", // Set the content type to "application/json"
+        // Content-Type header is not needed here; FormData handles it.
       };
 
       const response = await axios.post(
         "https://9dac-49-205-81-55.ngrok-free.app/prelim/",
-        requestData,
+        formdatadiag, // Send the FormData directly
         { headers }
       );
 
-      // Handle the response here
       console.log("Response data:", response.data);
     } catch (error) {
       console.error("Error fetching user data:", error);
     }
   };
 
-  const handleConfirm = () => {
-    PrelimPredic();
-  };
-
-  const initCamera = async () => {
+  const performPrediction = async () => {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-      setCameraStream(stream);
-      setShowCamera(true);
-
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-        videoRef.current.play();
-      }
-    } catch (error) {
-      console.error("Error opening camera:", error);
-    }
-  };
-
-  const closeCamera = () => {
-    if (cameraStream) {
-      cameraStream.getTracks().forEach((track) => track.stop());
-      setCameraStream(null);
-      setShowCamera(false);
-      setSnapshot(null);
-    }
-  };
-
-  const takeSnapshot = async () => {
-    if (cameraStream) {
-      const videoTrack = cameraStream.getVideoTracks()[0];
-      const imageCapture = new ImageCapture(videoTrack);
-      const blob = await imageCapture.takePhoto();
-      const imageUrl = URL.createObjectURL(blob);
-      setSnapshot(imageUrl);
-      closeCamera();
-      setUploadedImage(imageUrl);
-    }
-  };
-
-  const retakeSnapshot = () => {
-    setSnapshot(null);
-    initCamera();
-  };
-
-  useEffect(() => {
-    const runObjectDetection = async () => {
-      console.log("Custom model going to load.");
+      setIsPredicting(true); // Start predicting
       const model = await tf.loadLayersModel(
         "https://raw.githubusercontent.com/VarunCypherV/FloraDoc/main/Model4/model.json"
       );
-      console.log("Custom model loaded.");
-      if (uploadedImage || snapshot) {
+
+      if (imageURL || snapshot) {
         const img = new Image();
-        img.src = uploadedImage || snapshot;
+        img.src = imageURL || snapshot;
         img.onload = async () => {
           const canvas = document.createElement("canvas");
           canvas.width = 256;
@@ -177,77 +127,135 @@ const Diagnosis = () => {
           const maxIndex = predictions.indexOf(Math.max(...predictions));
 
           setPredictionResult(classLabels[maxIndex]);
+
+          setIsPredicting(false); // Finish predicting
         };
       }
-    };
+    } catch (error) {
+      setIsPredicting(false); // Finish predicting on error
+      console.error("Error predicting:", error);
+    }
+  };
 
-    runObjectDetection();
+  const handleConfirm = async (e) => {
+    e.preventDefault();
 
-    return () => {
+    // Wait for the prediction to finish before calling PrelimPredic
+    if (!isPredicting) {
+      await performPrediction();
+      PrelimPredic();
+    }
+  };
+
+  const initCamera = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      setCameraStream(stream);
+      setShowCamera(true);
+
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+        videoRef.current.play();
+      }
+    } catch (error) {
+      console.error("Error opening camera:", error);
+    }
+  };
+
+  const closeCamera = () => {
+    if (cameraStream) {
+      cameraStream.getTracks().forEach((track) => track.stop());
+      setCameraStream(null);
+      setShowCamera(false);
+      setSnapshot(null);
+    }
+  };
+
+  const takeSnapshot = async () => {
+    if (cameraStream) {
+      const videoTrack = cameraStream.getVideoTracks()[0];
+      const imageCapture = new ImageCapture(videoTrack);
+      const blob = await imageCapture.takePhoto();
+      const imageUrl = URL.createObjectURL(blob);
+      setSnapshot(imageUrl);
       closeCamera();
-    };
+      setUploadedImage(imageUrl);
+    }
+  };
+
+  const retakeSnapshot = () => {
+    setSnapshot(null);
+    initCamera();
+  };
+
+  useEffect(() => {
+    if (uploadedImage || snapshot) {
+      performPrediction();
+    }
   }, [uploadedImage, snapshot]);
 
   return (
     <div>
-      <Header />
-      <input type="file" accept="image/*" onChange={handleImageUpload} />
-      {uploadedImage && (
-        <img
-          src={uploadedImage}
-          alt="Uploaded"
-          style={{ maxWidth: "100%", maxHeight: "300px" }}
-        />
-      )}
-
-      {showCamera ? (
-        <div>
-          <button onClick={takeSnapshot}>Take Snapshot</button>
-          <button onClick={closeCamera}>Close Camera</button>
-        </div>
-      ) : (
-        <button onClick={initCamera}>Open Camera</button>
-      )}
-
-      <video
-        ref={videoRef}
-        style={{
-          maxWidth: "100%",
-          maxHeight: "300px",
-          display: showCamera ? "block" : "none",
-        }}
-        autoPlay
-        playsInline
-        muted
-      />
-
-      {snapshot && (
-        <div>
+      <form>
+        <input type="file" accept="image/*" onChange={handleImageUpload} />
+        {uploadedImage && (
           <img
-            src={snapshot}
-            alt="Snapshot"
+            src={URL.createObjectURL(uploadedImage)}
+            alt="Uploaded"
             style={{ maxWidth: "100%", maxHeight: "300px" }}
           />
-          <button onClick={retakeSnapshot}>Retake</button>
-        </div>
-      )}
-      <button onClick={handleConfirm}>Confirm</button>
-      <div>{predictionResult}</div>
+        )}
 
-      <canvas
-        ref={canvasRef}
-        style={{
-          position: "absolute",
-          left: 0,
-          right: 0,
-          margin: "auto",
-          textAlign: "center",
-          zIndex: 9,
-          height: 800,
-          width: 800,
-        }}
-      />
-      <Footer />
+        {showCamera ? (
+          <div>
+            <button onClick={takeSnapshot}>Take Snapshot</button>
+            <button onClick={closeCamera}>Close Camera</button>
+          </div>
+        ) : (
+          <button onClick={initCamera}>Open Camera</button>
+        )}
+
+        <video
+          ref={videoRef}
+          style={{
+            maxWidth: "100%",
+            maxHeight: "300px",
+            display: showCamera ? "block" : "none",
+          }}
+          autoPlay
+          playsInline
+          muted
+        />
+
+        {snapshot && (
+          <div>
+            <img
+              src={snapshot}
+              alt="Snapshot"
+              style={{ maxWidth: "100%", maxHeight: "300px" }}
+            />
+            <button onClick={retakeSnapshot}>Retake</button>
+          </div>
+        )}
+        <button type="submit" onClick={handleConfirm} disabled={isPredicting}>
+          Confirm
+        </button>
+        <div>{isPredicting ? "Predicting..." : predictionResult}</div>
+
+        <canvas
+          ref={canvasRef}
+          style={{
+            position: "absolute",
+            left: 0,
+            right: 0,
+            margin: "auto",
+            textAlign: "center",
+            zIndex: 9,
+            height: 800,
+            width: 800,
+          }}
+        />
+      </form>
     </div>
   );
 };
