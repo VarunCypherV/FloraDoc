@@ -53,7 +53,6 @@ function BookAppointment() {
   const handleConfirm = (result) => {
     
     setrecievedPredictionName(result);
-    
   
   };
 
@@ -112,12 +111,12 @@ function BookAppointment() {
                 <Row>
                   <Cell>
                     <div>Crop Name</div>
-                    {recievedPredictionName.data.diagnosis.plant}
+                    <input value="Crop" disabled={true} type="text" />
                   </Cell>
                   <Cell>
                     <div>Disease</div>
                     <textarea
-                      value={recievedPredictionName.data.diagnosis.disease_name}
+                      value={recievedPredictionName}
                       disabled={true}
                       type="text"
                     />
@@ -128,7 +127,7 @@ function BookAppointment() {
                     <div>Disease Description</div>
                     <textarea
                       
-                      value={recievedPredictionName.data.diagnosis.report}
+                      value="Disease Description"
                       disabled={true}
                       type="text"
                     />
