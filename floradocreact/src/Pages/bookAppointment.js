@@ -7,7 +7,6 @@ import { PDFDocument } from "pdf-lib";
 import * as htmlToImage from "html-to-image";
 import { useAuth } from "../Context/AuthContext";
 import axios from "axios";
-import Diagnosis from "./diagnosis";
 
 //farmer name : get user DONE
 //model gives id that as diagnosis and uplaoded image : post req to prelim  :
@@ -19,12 +18,7 @@ function BookAppointment() {
   const { token } = useAuth();
   const [userData, setUserData] = useState(null);
   const [recievedPredictionName, setrecievedPredictionName] = useState("");
-  const [uploadedImage, setUploadedImage] = useState(null);
-
-  const handleImageUpload = (image) => {
-    setUploadedImage(image);
-  };
-
+  // const [uploadedImage, setUploadedImage] = useState(null);
   const fetchdata = async () => {
     try {
       const response = await axios.get(
@@ -60,33 +54,33 @@ function BookAppointment() {
   const handleCancel = () => {
     alert("Appointment cancelled.");
   };
-  const PrelimPredic = async () => {
-    try {
-      console.log(token);
+  // const PrelimPredic = async () => {
+  //   try {
+  //     console.log(token);
 
-      const response = await axios.post(
-        "https://9dac-49-205-81-55.ngrok-free.app/prelim/",
-        {
-          diagnosis: {
-            disease_tag: recievedPredictionName,
-          },
-          image: uploadedImage,
-        },
-        {
-          headers: {
-            Authorization: `Token ${token}`,
-            "ngrok-skip-browser-warning": "69420",
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-    } catch (error) {
-      console.error("Error fetching user data:", error);
-    }
-  };
-  const handleConfirm = (result) => {
-    setrecievedPredictionName(result);
-  };
+  //     const response = await axios.post(
+  //       "https://9dac-49-205-81-55.ngrok-free.app/prelim/",
+  //       {
+  //         diagnosis: {
+  //           disease_tag: recievedPredictionName,
+  //         },
+  //         image: uploadedImage,
+  //       },
+  //       {
+  //         headers: {
+  //           Authorization: `Token ${token}`,
+  //           "ngrok-skip-browser-warning": "69420",
+  //           "Content-Type": "multipart/form-data",
+  //         },
+  //       }
+  //     );
+  //   } catch (error) {
+  //     console.error("Error fetching user data:", error);
+  //   }
+  // };
+  // const handleConfirm = (result) => {
+  //   setrecievedPredictionName(result);
+  // };
 
   const handlePrint = async () => {
     const reportContainer = document.getElementById("report-container");
@@ -158,7 +152,8 @@ function BookAppointment() {
                 <Row>
                   <Cell>
                     <div>Disease Description</div>
-                    <input
+                    <textarea
+                      onInput={autoResize}
                       value="Disease Description"
                       disabled={true}
                       type="text"

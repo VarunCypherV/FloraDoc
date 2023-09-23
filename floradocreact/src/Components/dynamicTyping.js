@@ -75,6 +75,7 @@
 // };
 
 // export default DynamicTyping;
+
 import React, { useState } from "react";
 import styled from "styled-components";
 import { PDFDocument, rgb } from "pdf-lib";
@@ -100,7 +101,6 @@ const PrescriptionTextarea = styled.textarea`
   font-family: "Courier New", monospace;
 `;
 
-// Define a styled component for the button
 const PrescriptionButton = styled.button`
   background-color: #007bff;
   color: #fff;
@@ -121,7 +121,7 @@ const DynamicTyping = () => {
   const handleDownload = async () => {
     const pdfDoc = await PDFDocument.create();
     const page = pdfDoc.addPage([400, 400]);
-
+    
     page.drawText(text, {
       x: 50,
       y: 350,
@@ -137,7 +137,7 @@ const DynamicTyping = () => {
 
     const a = document.createElement("a");
     a.href = url;
-    a.download = "downloaded-text.pdf"; // Set the file name to .pdf
+    a.download = "downloaded-text.pdf";
     a.click();
     URL.revokeObjectURL(url);
   };
