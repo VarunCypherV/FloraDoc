@@ -19,6 +19,10 @@ function BookAppointment() {
   const [userData, setUserData] = useState(null);
   const [recievedPredictionName, setrecievedPredictionName] = useState("");
   // const [uploadedImage, setUploadedImage] = useState(null);
+  // const handleImageUpload = (image) => {
+  //   setUploadedImage(image);
+  // };
+
   const fetchdata = async () => {
     try {
       const response = await axios.get(
