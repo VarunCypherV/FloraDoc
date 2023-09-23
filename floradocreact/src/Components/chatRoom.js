@@ -24,7 +24,6 @@ function ChatRoom() {
     setMessage("");
   };
 
-  
   useEffect(() => {
     socket.on("receive_message", (data) => {
       // Add the received message to the messages list with the sender's ID
@@ -61,9 +60,7 @@ function ChatRoom() {
       <div className="message-container">
         {messages.map((msg, index) => (
           <div key={index} className="message">
-            <strong>
-              {msg.sender === userId ? "You" : msg.sender}:
-            </strong>{" "}
+            <strong>{msg.sender === userId ? "You" : msg.sender}:</strong>{" "}
             {msg.text}
           </div>
         ))}

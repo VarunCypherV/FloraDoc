@@ -2,6 +2,8 @@ import React, { useRef, useEffect, useState } from "react";
 import * as tf from "@tensorflow/tfjs";
 import axios from "axios";
 import { useAuth } from "../Context/AuthContext";
+import Header from "../Components/header";
+import Footer from "../Components/footer";
 
 const Diagnosis = () => {
   const { token } = useAuth();
@@ -188,6 +190,7 @@ const Diagnosis = () => {
 
   return (
     <div>
+      <Header />
       <input type="file" accept="image/*" onChange={handleImageUpload} />
       {uploadedImage && (
         <img
@@ -244,6 +247,7 @@ const Diagnosis = () => {
           width: 800,
         }}
       />
+      <Footer />
     </div>
   );
 };

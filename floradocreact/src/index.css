@@ -177,3 +177,10 @@ video {
   object-fit: scale-down;
   max-width: 100%;
 }
+
+.button-container{
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}

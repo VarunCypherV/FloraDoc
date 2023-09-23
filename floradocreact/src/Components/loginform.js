@@ -88,14 +88,14 @@ const Loginform = () => {
               setFormData({ ...formData, password: e.target.value })
             }
           />
-          <ButtonContainer>
+          <div className="button-container">
             <div className="secondary-button" onClick={handleForgotPassword}>
               Forgot Password
             </div>
             <div className="primary-button" onClick={handleLogin}>
               {formData.loginStatus || "Login"}
             </div>
-          </ButtonContainer>
+          </div>
         </form>
       </div>
     </div>
@@ -103,10 +103,3 @@ const Loginform = () => {
 };
 
 export default Loginform;
-
-const ButtonContainer = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-evenly;
-`;
