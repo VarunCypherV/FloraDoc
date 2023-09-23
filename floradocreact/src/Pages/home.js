@@ -4,7 +4,9 @@ import Header from "../Components/header";
 import Footer from "../Components/footer";
 import hero from "../Assets/hero.png";
 import logo from "../Assets/logo.png";
+import { useNavigate } from "react-router-dom";
 function Home() {
+  const navigate = useNavigate();
   return (
     <>
       <Header />
@@ -16,12 +18,12 @@ function Home() {
           </TitleContainer>
           <p>Get Expert Advice from Plant Pathologists</p>
           <ButtonContainer>
-            <a className="primary-button" href="/signup">
+            <div className="primary-button" onClick={() => navigate("/signup")}>
               Get Started
-            </a>
-            <a className="secondary-button" href="/">
-              Learn More
-            </a>
+            </div>
+            <div className="secondary-button" onClick={() => navigate("/signin")}>
+              Login
+            </div>
           </ButtonContainer>
         </HeroText>
         <HeroImg src={hero} alt="hero" />

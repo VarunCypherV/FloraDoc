@@ -1,26 +1,60 @@
 import React, { useRef, useEffect, useState } from "react";
 import * as tf from "@tensorflow/tfjs";
-import { PDFDocument, rgb } from "pdf-lib";
+import axios from "axios";
+import { useAuth } from "../Context/AuthContext";
 
-const Diagnosis = (props) => {
+const Diagnosis = () => {
+  const { token } = useAuth();
   const canvasRef = useRef(null);
-  const videoRef = useRef(null); // Added video reference
+  const videoRef = useRef(null);
   const [uploadedImage, setUploadedImage] = useState(null);
   const [predictionResult, setPredictionResult] = useState("");
   const [cameraStream, setCameraStream] = useState(null);
   const [showCamera, setShowCamera] = useState(false);
   const [snapshot, setSnapshot] = useState(null);
-  
+
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     const imageUrl = URL.createObjectURL(file);
+
     setUploadedImage(imageUrl);
-    props.onImageUpload(imageUrl);
+  };
+
+  const PrelimPredic = async () => {
+    try {
+      console.log(token);
+
+      const requestData = {
+        diagnosis: {
+          disease_tag: predictionResult,
+        },
+        // Add other JSON data fields as needed
+        // field_name: field_value,
+      };
+
+      const headers = {
+        Authorization: `Token ${token}`,
+        "ngrok-skip-browser-warning": "69420",
+        "Content-Encoding": "gzip, deflate, br",
+        "Content-type":
+          "multipart/form-data; boundary=----WebKitFormBoundaryD5jeZoBNqMSjAUUy", // Set the content type to "application/json"
+      };
+
+      const response = await axios.post(
+        "https://9dac-49-205-81-55.ngrok-free.app/prelim/",
+        requestData,
+        { headers }
+      );
+
+      // Handle the response here
+      console.log("Response data:", response.data);
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
   };
 
   const handleConfirm = () => {
-    // Call the onConfirm function from the parent component
-    props.onConfirm(predictionResult);
+    PrelimPredic();
   };
 
   const initCamera = async () => {
@@ -56,10 +90,6 @@ const Diagnosis = (props) => {
       setSnapshot(imageUrl);
       closeCamera();
       setUploadedImage(imageUrl);
-
-      if (videoRef.current) {
-        videoRef.current.style.display = "none";
-      }
     }
   };
 
@@ -68,102 +98,89 @@ const Diagnosis = (props) => {
     initCamera();
   };
 
-
   useEffect(() => {
     const runObjectDetection = async () => {
-      // Load your custom TensorFlow.js model
-
-      console.log('Custom model going to load.');
-      const model = await tf.loadLayersModel('https://raw.githubusercontent.com/VarunCypherV/FloraDoc/main/Model4/model.json');
-      console.log('Custom model loaded.');
-
-
-      // If an image has been uploaded or a snapshot is available, proceed with detection
+      console.log("Custom model going to load.");
+      const model = await tf.loadLayersModel(
+        "https://raw.githubusercontent.com/VarunCypherV/FloraDoc/main/Model4/model.json"
+      );
+      console.log("Custom model loaded.");
       if (uploadedImage || snapshot) {
-        // Load the image for prediction (either uploaded or snapshot)
         const img = new Image();
         img.src = uploadedImage || snapshot;
         img.onload = async () => {
-          // Ensure the image has the desired dimensions (256x256)
-
-          const canvas = document.createElement('canvas');
+          const canvas = document.createElement("canvas");
           canvas.width = 256;
           canvas.height = 256;
-          const ctx = canvas.getContext('2d');
+          const ctx = canvas.getContext("2d");
+
           ctx.drawImage(img, 0, 0, 256, 256);
-      
-          // Convert the canvas to a TensorFlow tensor
+
           const tensor = tf.browser.fromPixels(canvas);
 
-          // Normalize the pixel values to be between 0 and 1
           const normalizedImage = tensor.div(255.0);
 
-          // Expand dimensions to match the model's input shape
           const inputTensor = normalizedImage.expandDims(0);
 
-          // Make predictions
           const predictions = await model.predict(inputTensor).data();
-          console.log(predictions);
-          
-          // Define the class labels
-          const classLabels = ['Applehealthy',
-          'Applerust',
-          'Applescab',
-          'Apple_black_rot',
-          'Corncommon_rust',
-          'Corngray_leaf_spot',
-          'Cornhealthy',
-          'Cornnorthern_leaf_blight',
-          'Grapeblack_measles',
-          'Grapeblack_rot',
-          'Grapehealthy',
-          'Grapeleaf_blight',
-          'Potatoearly_blight',
-          'Potatohealthy',
-          'Potatolate_blight',
-          'Ricebrown_spot',
-          'Ricehispa',
-          'Riceleaf_blast',
-          'Riceneck_blast',
-          'Rice_healthy',
-          'Sugarcanebacterial_blight',
-          'Sugarcanehealthy',
-          'Sugarcanered_rot',
-          'Sugarcanered_stripe',
-          'Sugarcanerust',
-          'Teaalgal_leaf',
-          'Teaanthracnose',
-          'Teabird_eye_spot',
-          'Teabrown_blight',
-          'Teahealthy',
-          'Teared_leaf_spot',
-          'Tomatobacterial_spot',
-          'Tomatoearly_blight',
-          'Tomatohealthy',
-          'Tomatolate_blight',
-          'Tomatoleaf_mold',
-          'Tomatomosaic_virus',
-          'Tomatoseptoria_leaf_spot',
-          'Tomatospider_mites',
-          'Tomatotarget_spot',
-          'Tomatoyellow_leaf_curl_virus',
-          'Wheatbrown_rust',
-          'Wheathealthy',
-          'Wheatseptoria',
-          'Wheat__yellow_rust'];
 
-          // Find the index with the highest probability
+          const classLabels = [
+            "Applehealthy",
+            "Applerust",
+            "Applescab",
+            "Apple_black_rot",
+            "Corncommon_rust",
+            "Corngray_leaf_spot",
+            "Cornhealthy",
+            "Cornnorthern_leaf_blight",
+            "Grapeblack_measles",
+            "Grapeblack_rot",
+            "Grapehealthy",
+            "Grapeleaf_blight",
+            "Potatoearly_blight",
+            "Potatohealthy",
+            "Potatolate_blight",
+            "Ricebrown_spot",
+            "Ricehispa",
+            "Riceleaf_blast",
+            "Riceneck_blast",
+            "Rice_healthy",
+            "Sugarcanebacterial_blight",
+            "Sugarcanehealthy",
+            "Sugarcanered_rot",
+            "Sugarcanered_stripe",
+            "Sugarcanerust",
+            "Teaalgal_leaf",
+            "Teaanthracnose",
+            "Teabird_eye_spot",
+            "Teabrown_blight",
+            "Teahealthy",
+            "Teared_leaf_spot",
+            "Tomatobacterial_spot",
+            "Tomatoearly_blight",
+            "Tomatohealthy",
+            "Tomatolate_blight",
+            "Tomatoleaf_mold",
+            "Tomatomosaic_virus",
+            "Tomatoseptoria_leaf_spot",
+            "Tomatospider_mites",
+            "Tomatotarget_spot",
+            "Tomatoyellow_leaf_curl_virus",
+            "Wheatbrown_rust",
+            "Wheathealthy",
+            "Wheatseptoria",
+            "Wheat__yellow_rust",
+          ];
+
           const maxIndex = predictions.indexOf(Math.max(...predictions));
 
-    // Set the predicted class
-    setPredictionResult(classLabels[maxIndex]);
+          setPredictionResult(classLabels[maxIndex]);
         };
       }
     };
 
     runObjectDetection();
 
-    // Cleanup function to close the camera when the component unmounts
     return () => {
       closeCamera();
     };
@@ -171,7 +188,6 @@ const Diagnosis = (props) => {
 
   return (
     <div>
-
       <input type="file" accept="image/*" onChange={handleImageUpload} />
       {uploadedImage && (
         <img
@@ -181,7 +197,6 @@ const Diagnosis = (props) => {
         />
       )}
 
-      {/* Camera Controls */}
       {showCamera ? (
         <div>
           <button onClick={takeSnapshot}>Take Snapshot</button>
@@ -191,7 +206,6 @@ const Diagnosis = (props) => {
         <button onClick={initCamera}>Open Camera</button>
       )}
 
-      {/* Live Camera Preview */}
       <video
         ref={videoRef}
         style={{
@@ -204,7 +218,6 @@ const Diagnosis = (props) => {
         muted
       />
 
-      {/* Display Snapshot */}
       {snapshot && (
         <div>
           <img
@@ -217,7 +230,7 @@ const Diagnosis = (props) => {
       )}
       <button onClick={handleConfirm}>Confirm</button>
       <div>{predictionResult}</div>
-      
+
       <canvas
         ref={canvasRef}
         style={{

@@ -54,21 +54,15 @@ function BookAppointment() {
   };
 
   const handleBookAppointment = () => {
-    // Add code to book appointment
     alert("Appointment booked!");
   };
 
   const handleCancel = () => {
-    // Add code to cancel appointment
     alert("Appointment cancelled.");
   };
   const PrelimPredic = async () => {
     try {
       console.log(token);
-
-      // const imageUrlWithoutBlob = uploadedImage.substring(5);
-
-      // setUploadedImage(imageUrlWithoutBlob);
 
       const response = await axios.post(
         "https://9dac-49-205-81-55.ngrok-free.app/prelim/",
@@ -83,7 +77,6 @@ function BookAppointment() {
             Authorization: `Token ${token}`,
             "ngrok-skip-browser-warning": "69420",
             "Content-Type": "multipart/form-data",
-            // 'Content-Type': 'application/json'
           },
         }
       );
@@ -92,9 +85,7 @@ function BookAppointment() {
     }
   };
   const handleConfirm = (result) => {
-    // Do something with the prediction result
     setrecievedPredictionName(result);
-    PrelimPredic();
   };
 
   const handlePrint = async () => {
@@ -125,7 +116,7 @@ function BookAppointment() {
     <>
       <Header />
       <div className="page-container">
-        {userData ? ( // Conditional rendering
+        {userData ? (
           <>
             <ReportContainer id="report-container">
               <TitleContainer>AI PRELIMINARY DIAGNOSIS</TitleContainer>
@@ -192,7 +183,6 @@ function BookAppointment() {
             </ButtonContainer>
           </>
         ) : (
-          // Render a loading message or spinner while userData is null
           <>
             <TitleContainer>
               Kindly login before using our services!
