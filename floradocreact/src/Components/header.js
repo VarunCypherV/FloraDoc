@@ -36,7 +36,7 @@ const Header = () => {
     <HeaderContainer>
       <LogoContainer>
         <LogoImg src={logo} alt="logo"></LogoImg>
-        Flora Doc
+        FloraDoc
       </LogoContainer>
       <LinkContainer>
         <Link onClick={() => navigate("/")}>Home</Link>

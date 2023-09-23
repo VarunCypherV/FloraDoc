@@ -8,7 +8,7 @@ const Footer = () => {
     <FooterContainer>
       <LogoContainer>
         <LogoImg src={logo} alt="logo"></LogoImg>
-        Flora Doc
+        FloraDoc
       </LogoContainer>
       <FooterCols>
         <FooterCol>
