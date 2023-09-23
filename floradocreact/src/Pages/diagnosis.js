@@ -52,12 +52,6 @@ const Diagnosis = () => {
     }
   };
   
-  
-    
-
-
-
-  
 
   const handleConfirm = () => {
     PrelimPredic();
@@ -107,40 +101,28 @@ const Diagnosis = () => {
 
   useEffect(() => {
     const runObjectDetection = async () => {
-      // Load your custom TensorFlow.js model
-
       console.log('Custom model going to load.');
       const model = await tf.loadLayersModel('https://raw.githubusercontent.com/VarunCypherV/FloraDoc/main/Model4/model.json');
       console.log('Custom model loaded.');
-
-
-      // If an image has been uploaded or a snapshot is available, proceed with detection
       if (uploadedImage || snapshot) {
-        // Load the image for prediction (either uploaded or snapshot)
         const img = new Image();
         img.src = uploadedImage || snapshot;
         img.onload = async () => {
-          // Ensure the image has the desired dimensions (256x256)
-
           const canvas = document.createElement('canvas');
           canvas.width = 256;
           canvas.height = 256;
           const ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0, 256, 256);
-      
-          // Convert the canvas to a TensorFlow tensor
-          const tensor = tf.browser.fromPixels(canvas);
 
-          // Normalize the pixel values to be between 0 and 1
+          ctx.drawImage(img, 0, 0, 256, 256);
+
+          const tensor = tf.browser.fromPixels(canvas); 
+
           const normalizedImage = tensor.div(255.0);
 
-          // Expand dimensions to match the model's input shape
           const inputTensor = normalizedImage.expandDims(0);
 
-          // Make predictions
           const predictions = await model.predict(inputTensor).data();
 
-          // Define the class labels
           const classLabels = [
             'Applehealthy',
             'Applerust',
@@ -189,10 +171,10 @@ const Diagnosis = () => {
             'Wheat__yellow_rust'
           ];
 
-          // Find the index with the highest probability
+  
           const maxIndex = predictions.indexOf(Math.max(...predictions));
 
-    // Set the predicted class
+ 
     setPredictionResult(classLabels[maxIndex]);
         };
       }
@@ -200,7 +182,6 @@ const Diagnosis = () => {
 
     runObjectDetection();
 
-    // Cleanup function to close the camera when the component unmounts
     return () => {
       closeCamera();
     };
@@ -218,7 +199,7 @@ const Diagnosis = () => {
         />
       )}
 
-      {/* Camera Controls */}
+
       {showCamera ? (
         <div>
           <button onClick={takeSnapshot}>Take Snapshot</button>
@@ -228,7 +209,7 @@ const Diagnosis = () => {
         <button onClick={initCamera}>Open Camera</button>
       )}
 
-      {/* Live Camera Preview */}
+   
       <video
         ref={videoRef}
         style={{
@@ -241,7 +222,7 @@ const Diagnosis = () => {
         muted
       />
 
-      {/* Display Snapshot */}
+
       {snapshot && (
         <div>
           <img

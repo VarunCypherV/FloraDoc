@@ -79,7 +79,6 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { PDFDocument, rgb } from 'pdf-lib';
 
-// Define a styled component for the prescription container
 const PrescriptionContainer = styled.div`
   background-color: #fff;
   border: 2px solid #000;
@@ -90,7 +89,6 @@ const PrescriptionContainer = styled.div`
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 `;
 
-// Define a styled component for the textarea
 const PrescriptionTextarea = styled.textarea`
   width: 100%;
   height: 150px;
@@ -121,11 +119,9 @@ const DynamicTyping = () => {
   };
 
   const handleDownload = async () => {
-    // Create a new PDF document
     const pdfDoc = await PDFDocument.create();
     const page = pdfDoc.addPage([400, 400]);
     
-    // Add the text to the PDF page
     page.drawText(text, {
       x: 50,
       y: 350,
@@ -133,24 +129,16 @@ const DynamicTyping = () => {
       color: rgb(0, 0, 0),
     });
 
-    // Serialize the PDF to bytes
     const pdfBytes = await pdfDoc.save();
 
-    // Create a Blob from the bytes
     const blob = new Blob([pdfBytes], { type: "application/pdf" });
 
-    // Create a URL for the Blob
     const url = URL.createObjectURL(blob);
 
-    // Create an anchor element for downloading
     const a = document.createElement("a");
     a.href = url;
     a.download = "downloaded-text.pdf"; // Set the file name to .pdf
-
-    // Trigger a click event on the anchor element
     a.click();
-
-    // Clean up by revoking the URL
     URL.revokeObjectURL(url);
   };
 

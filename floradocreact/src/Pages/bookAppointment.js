@@ -52,22 +52,18 @@ function BookAppointment() {
     textarea.style.height = "auto";
     textarea.style.height = textarea.scrollHeight + "px";
   };
+
   const handleBookAppointment = () => {
-    // Add code to book appointment
     alert("Appointment booked!");
   };
 
   const handleCancel = () => {
-    // Add code to cancel appointment
     alert("Appointment cancelled.");
   };
   const PrelimPredic = async () => {
     try {
       console.log(token);
 
-      // const imageUrlWithoutBlob = uploadedImage.substring(5);
-
-      // setUploadedImage(imageUrlWithoutBlob);
 
       const response = await axios.post(
         "https://9dac-49-205-81-55.ngrok-free.app/prelim/",
@@ -82,7 +78,6 @@ function BookAppointment() {
             Authorization: `Token ${token}`,
             "ngrok-skip-browser-warning": "69420",
             "Content-Type": "multipart/form-data",
-            // 'Content-Type': 'application/json'
           },
         }
       );
@@ -91,9 +86,9 @@ function BookAppointment() {
     }
   };
   const handleConfirm = (result) => {
-    // Do something with the prediction result
+ 
     setrecievedPredictionName(result);
-    // PrelimPredic();
+  
   };
 
   const handlePrint = async () => {
@@ -124,7 +119,7 @@ function BookAppointment() {
     <>
       <Header />
       <div className="page-container">
-        {userData ? ( // Conditional rendering
+        {userData ? ( 
           <>
             <ReportContainer id="report-container">
               <TitleContainer>AI PRELIMINARY DIAGNOSIS</TitleContainer>
@@ -156,7 +151,7 @@ function BookAppointment() {
                   </Cell>
                   <Cell>
                     <div>Disease</div>
-                    <input
+                    <textarea
                       value={recievedPredictionName}
                       disabled={true}
                       type="text"
@@ -170,13 +165,6 @@ function BookAppointment() {
                       value="Disease Description"
                       disabled={true}
                       type="text"
-                    />
-                  </Cell>
-                  <Cell>
-                    <div>Additional Comments</div>
-                    <textarea
-                      placeholder="Enter additional comments (if any)"
-                      onInput={autoResize}
                     />
                   </Cell>
                 </Row>
@@ -198,7 +186,7 @@ function BookAppointment() {
             </ButtonContainer>
           </>
         ) : (
-          // Render a loading message or spinner while userData is null
+   
           <>
             <TitleContainer>
               Kindly login before using our services!
