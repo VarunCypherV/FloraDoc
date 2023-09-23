@@ -21,7 +21,10 @@ function Home() {
             <div className="primary-button" onClick={() => navigate("/signup")}>
               Get Started
             </div>
-            <div className="secondary-button" onClick={() => navigate("/signin")}>
+            <div
+              className="secondary-button"
+              onClick={() => navigate("/signin")}
+            >
               Login
             </div>
           </ButtonContainer>
@@ -35,7 +38,7 @@ function Home() {
         <Cards>
           <Card>
             <CardImg src={logo} alt="card-image" />
-            <CardTitle>Expert-Backed Insights</CardTitle>
+            <CardTitle>Expertise Assurance</CardTitle>
             <p>
               Connect directly with certified plant pathologists, ensuring you
               receive accurate and reliable advice from seasoned professionals.
@@ -44,7 +47,7 @@ function Home() {
           </Card>
           <Card>
             <CardImg src={logo} alt="card-image" />
-            <CardTitle>Comprehensive Communication Tools</CardTitle>
+            <CardTitle>Seamless Interaction</CardTitle>
             <p>
               Utilize real-time video, in-depth audio, and instant chat support
               for a thorough understanding of your plant's condition.
@@ -53,7 +56,7 @@ function Home() {
           </Card>
           <Card>
             <CardImg src={logo} alt="card-image" />
-            <CardTitle>AI-Powered Accuracy</CardTitle>
+            <CardTitle>AI-Powered</CardTitle>
             <p>
               Integrated with a machine learning model boasting 90% accuracy,
               providing you with highly reliable preliminary diagnoses.
@@ -124,6 +127,7 @@ const Card = styled.div`
   width: 30%;
   padding: 3em;
   position: relative;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.25);
   :hover > CardTitle:before {
     transition: all 0.3s ease;
     height: 100%;
@@ -144,6 +148,9 @@ const CardBg = styled.div`
 
 const CardTitle = styled.p`
   font-size: var(--subtitle);
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+  color: var(--text);
   z-index: 5;
   position: relative;
   display: flex;
