@@ -52,6 +52,7 @@ function BookAppointment() {
     textarea.style.height = "auto";
     textarea.style.height = textarea.scrollHeight + "px";
   };
+
   const handleBookAppointment = () => {
     // Add code to book appointment
     alert("Appointment booked!");
@@ -156,7 +157,7 @@ function BookAppointment() {
                   </Cell>
                   <Cell>
                     <div>Disease</div>
-                    <input
+                    <textarea
                       value={recievedPredictionName}
                       disabled={true}
                       type="text"
@@ -170,13 +171,6 @@ function BookAppointment() {
                       value="Disease Description"
                       disabled={true}
                       type="text"
-                    />
-                  </Cell>
-                  <Cell>
-                    <div>Additional Comments</div>
-                    <textarea
-                      placeholder="Enter additional comments (if any)"
-                      onInput={autoResize}
                     />
                   </Cell>
                 </Row>
