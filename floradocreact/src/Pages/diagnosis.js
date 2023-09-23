@@ -1,9 +1,10 @@
 import React, { useRef, useEffect, useState } from "react";
 import * as tf from "@tensorflow/tfjs";
 import axios from "axios";
-import PropTypes from "prop-types"; // Add prop type validation if not using TypeScript
+import { useAuth } from '../Context/AuthContext';
 
-const Diagnosis = (props) => {
+const Diagnosis = () => {
+  const { token } = useAuth();
   const canvasRef = useRef(null);
   const videoRef = useRef(null);
   const [uploadedImage, setUploadedImage] = useState(null);
@@ -15,41 +16,51 @@ const Diagnosis = (props) => {
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     const imageUrl = URL.createObjectURL(file);
+    
     setUploadedImage(imageUrl);
-    props.onImageUpload(imageUrl);
-    props.setDiagnosisImage(imageUrl);
   };
 
-  const sendPrelimPrediction = async () => {
+  const PrelimPredic = async () => {
     try {
-      const formData = new FormData();
-      formData.append(
-        "diagnosis",
-        JSON.stringify({ disease_tag: predictionResult })
-      );
-      formData.append("image", uploadedImage);
-
+      console.log(token);
+  
+      const requestData = {
+        diagnosis: {
+          disease_tag: predictionResult,
+        },
+        // Add other JSON data fields as needed
+        // field_name: field_value,
+      };
+  
+      const headers = {
+        "Authorization": `Token ${token}`,
+        "ngrok-skip-browser-warning": "69420",
+        "Content-Encoding": "gzip, deflate, br",
+        "Content-type": "multipart/form-data; boundary=----WebKitFormBoundaryD5jeZoBNqMSjAUUy" // Set the content type to "application/json"
+      };
+  
       const response = await axios.post(
         "https://9dac-49-205-81-55.ngrok-free.app/prelim/",
-        formData,
-        {
-          headers: {
-            Authorization: `Token ${props.token}`,
-            "ngrok-skip-browser-warning": "69420",
-          },
-        }
+        requestData,
+        { headers }
       );
-
-      // Handle the response, update state, or perform other actions as needed.
+  
+      // Handle the response here
+      console.log("Response data:", response.data);
     } catch (error) {
-      console.error("Error posting preliminary diagnosis:", error);
+      console.error("Error fetching user data:", error);
     }
   };
+  
+  
+    
 
-  const handleConfirm = (e) => {
-    e.preventDefault();
-    props.onConfirm(predictionResult);
-    sendPrelimPrediction();
+
+
+  
+
+  const handleConfirm = () => {
+    PrelimPredic();
   };
 
   const initCamera = async () => {
@@ -85,10 +96,6 @@ const Diagnosis = (props) => {
       setSnapshot(imageUrl);
       closeCamera();
       setUploadedImage(imageUrl);
-
-      if (videoRef.current) {
-        videoRef.current.style.display = "none";
-      }
     }
   };
 
@@ -100,16 +107,17 @@ const Diagnosis = (props) => {
   useEffect(() => {
     const runObjectDetection = async () => {
       // Load your custom TensorFlow.js model
+      console.log("Custom model going to load.");
       const model = await tf.loadLayersModel(
-        "https://raw.githubusercontent.com/VarunCypherV/FloraDoc/main/Model6/model.json"
+        "https://raw.githubusercontent.com/VarunCypherV/FloraDoc/main/Model3/model.json"
       );
+      console.log("Custom model loaded.");
 
       // If an image has been uploaded or a snapshot is available, proceed with detection
       if (uploadedImage || snapshot) {
         // Load the image for prediction (either uploaded or snapshot)
         const img = new Image();
         img.src = uploadedImage || snapshot;
-
         img.onload = async () => {
           // Ensure the image has the desired dimensions (256x256)
           const canvas = document.createElement("canvas");
@@ -131,51 +139,53 @@ const Diagnosis = (props) => {
           const predictions = await model.predict(inputTensor).data();
 
           // Define the class labels
-          const classLabels = ['Applehealthy',
-          'Applerust',
-          'Applescab',
-          'Apple_black_rot',
-          'Corncommon_rust',
-          'Corngray_leaf_spot',
-          'Cornhealthy',
-          'Cornnorthern_leaf_blight',
-          'Grapeblack_measles',
-          'Grapeblack_rot',
-          'Grapehealthy',
-          'Grapeleaf_blight',
-          'Potatoearly_blight',
-          'Potatohealthy',
-          'Potatolate_blight',
-          'Ricebrown_spot',
-          'Ricehispa',
-          'Riceleaf_blast',
-          'Riceneck_blast',
-          'Rice_healthy',
-          'Sugarcanebacterial_blight',
-          'Sugarcanehealthy',
-          'Sugarcanered_rot',
-          'Sugarcanered_stripe',
-          'Sugarcanerust',
-          'Teaalgal_leaf',
-          'Teaanthracnose',
-          'Teabird_eye_spot',
-          'Teabrown_blight',
-          'Teahealthy',
-          'Teared_leaf_spot',
-          'Tomatobacterial_spot',
-          'Tomatoearly_blight',
-          'Tomatohealthy',
-          'Tomatolate_blight',
-          'Tomatoleaf_mold',
-          'Tomatomosaic_virus',
-          'Tomatoseptoria_leaf_spot',
-          'Tomatospider_mites',
-          'Tomatotarget_spot',
-          'Tomatoyellow_leaf_curl_virus',
-          'Wheatbrown_rust',
-          'Wheathealthy',
-          'Wheatseptoria',
-          'Wheat__yellow_rust'];
+          const classLabels = [
+            'Applehealthy',
+            'Applerust',
+            'Applescab',
+            'Apple_black_rot',
+            'Corncommon_rust',
+            'Corngray_leaf_spot',
+            'Cornhealthy',
+            'Cornnorthern_leaf_blight',
+            'Grapeblack_measles',
+            'Grapeblack_rot',
+            'Grapehealthy',
+            'Grapeleaf_blight',
+            'Potatoearly_blight',
+            'Potatohealthy',
+            'Potatolate_blight',
+            'Ricebrown_spot',
+            'Ricehispa',
+            'Riceleaf_blast',
+            'Riceneck_blast',
+            'Rice_healthy',
+            'Sugarcanebacterial_blight',
+            'Sugarcanehealthy',
+            'Sugarcanered_rot',
+            'Sugarcanered_stripe',
+            'Sugarcanerust',
+            'Teaalgal_leaf',
+            'Teaanthracnose',
+            'Teabird_eye_spot',
+            'Teabrown_blight',
+            'Teahealthy',
+            'Teared_leaf_spot',
+            'Tomatobacterial_spot',
+            'Tomatoearly_blight',
+            'Tomatohealthy',
+            'Tomatolate_blight',
+            'Tomatoleaf_mold',
+            'Tomatomosaic_virus',
+            'Tomatoseptoria_leaf_spot',
+            'Tomatospider_mites',
+            'Tomatotarget_spot',
+            'Tomatoyellow_leaf_curl_virus',
+            'Wheatbrown_rust',
+            'Wheathealthy',
+            'Wheatseptoria',
+            'Wheat__yellow_rust'
+          ];
 
           // Find the index with the highest probability
           const maxIndex = predictions.indexOf(Math.max(...predictions));
@@ -257,13 +267,6 @@ const Diagnosis = (props) => {
       />
     </div>
   );
-};
-
-Diagnosis.propTypes = {
-  onImageUpload: PropTypes.func.isRequired,
-  setDiagnosisImage: PropTypes.func.isRequired,
-  token: PropTypes.string.isRequired,
-  onConfirm: PropTypes.func.isRequired,
 };
 
 export default Diagnosis;

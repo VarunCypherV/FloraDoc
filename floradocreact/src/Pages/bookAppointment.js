@@ -5,64 +5,71 @@ import styled from "styled-components";
 import logo from "../Assets/logo.png";
 import { PDFDocument } from "pdf-lib";
 import * as htmlToImage from "html-to-image";
-import { useAuth } from "../Context/AuthContext";
+import { useAuth } from '../Context/AuthContext';
 import axios from "axios";
-import Diagnosis from "./diagnosis"; // Import the updated Diagnosis component
+import Diagnosis from "./diagnosis";
+
+  //farmer name : get user DONE
+  //model gives id that as diagnosis and uplaoded image : post req to prelim  : 
+  // with res of abv Crop Name Crop Disease Disease Description in the prelim form for download
+  //on click book appointment open a modal with time and additional comments , :=> farmerappointments desiease tag , type choices
+  //,description , time
 
 function BookAppointment() {
   const { token } = useAuth();
-  const [userData, setUserData] = useState(null);
-  const [receivedPredictionName, setReceivedPredictionName] = useState("");
-  const [uploadedImage, setUploadedImage] = useState(null);
-  const [diagnosisImage, setDiagnosisImage] = useState(null);
-
-  const handleImageUpload = (image) => {
-    setUploadedImage(image);
-  };
-
-  const fetchUserData = async () => {
+  const [userData, setUserData] = useState(null)
+  const [recievedPredictionName , setrecievedPredictionName] = useState("");
+  
+  const fetchdata = async () => {
     try {
-      const response = await axios.get(
-        "https://9dac-49-205-81-55.ngrok-free.app/getuser/",
-        {
-          headers: {
-            Authorization: `Token ${token}`,
-            "ngrok-skip-browser-warning": "69420",
-          },
-        }
-      );
+    
+      const response = await axios.get("https://9dac-49-205-81-55.ngrok-free.app/getuser/", {
+        headers: {
+          Authorization: `Token ${token}`,
+          "ngrok-skip-browser-warning": "69420",
 
+        },
+      });
+      
       setUserData(response.data[0]);
+
     } catch (error) {
       console.error("Error fetching user data:", error);
     }
   };
 
   useEffect(() => {
-    fetchUserData();
+    fetchdata();
   }, []);
+ 
+  
 
   const autoResize = () => {
     const textarea = document.querySelector("textarea");
     textarea.style.height = "auto";
     textarea.style.height = textarea.scrollHeight + "px";
   };
-
-  const handleBookAppointment = (e) => {
-    e.preventDefault();
-    // Add code to book the appointment
+  const handleBookAppointment = () => {
+    // Add code to book appointment
     alert("Appointment booked!");
   };
 
   const handleCancel = () => {
-    // Add code to cancel the appointment
+    // Add code to cancel appointment
     alert("Appointment cancelled.");
   };
-
+  
+  
   const handleConfirm = (result) => {
     // Do something with the prediction result
-    setReceivedPredictionName(result);
+    setrecievedPredictionName(result);
+    // PrelimPredic();
   };
+
+ 
+  
+
+  
 
   const handlePrint = async () => {
     const reportContainer = document.getElementById("report-container");
@@ -90,87 +97,78 @@ function BookAppointment() {
 
   return (
     <>
-      <Header />
-      <div className="page-container">
-        {userData ? (
-          <ReportContainer id="report-container">
-            <TitleContainer>AI PRELIMINARY DIAGNOSIS</TitleContainer>
-            <FormContainer>
-              <form encType="multipart/form-data">
-                <Row>
-                  <Cell>
-                    <div>Farmer Name</div>
-                    <input
-                      value={userData.user.username}
-                      disabled={true}
-                      type="text"
-                      placeholder="Enter Name"
-                    />
-                  </Cell>
-                </Row>
-                <Row>
-                  <Cell>
-                    <CropImage src={logo} alt="Crop Image" />
-                    <Diagnosis
-                      onConfirm={handleConfirm}
-                      onImageUpload={handleImageUpload}
-                      setDiagnosisImage={setDiagnosisImage}
-                      token={token}
-                    />
-                  </Cell>
-                </Row>
-                <Row>
-                  <Cell>
-                    <div>Crop Name</div>
-                    <input value="Crop" disabled={true} type="text" />
-                  </Cell>
-                  <Cell>
-                    <div>Disease</div>
-                    <input
-                      value={receivedPredictionName}
-                      disabled={true}
-                      type="text"
-                    />
-                  </Cell>
-                </Row>
-                <Row>
-                  <Cell>
-                    <div>Disease Description</div>
-                    <input
-                      value="Disease Description"
-                      disabled={true}
-                      type="text"
-                    />
-                  </Cell>
-                  <Cell>
-                    <div>Additional Comments</div>
-                    <textarea
-                      placeholder="Enter additional comments (if any)"
-                      onInput={autoResize}
-                    />
-                  </Cell>
-                </Row>
-              </form>
-            </FormContainer>
+     <Header />
+    <div className="page-container">
+      {userData ? ( // Conditional rendering
+        <ReportContainer id="report-container">
+          <TitleContainer>AI PRELIMINARY DIAGNOSIS</TitleContainer>
+          <FormContainer>
+          <Row>
+            <Cell>
+              <div>Farmer Name</div>
+              <input
+                value={userData.user.username}
+                disabled={true}
+                type="text"
+                placeholder="Enter Name"
+              />
+            </Cell>
+          </Row>
+            <Row>
+              <Cell>
+                <CropImage src={logo} alt="Crop Image" />
+                <Diagnosis onConfirm={handleConfirm}   />
+                </Cell>
+            </Row>
+            <Row>
+              <Cell>
+                <div>Crop Name</div>
+                <input value="Crop" disabled={true} type="text" />
+              </Cell>
+              <Cell>
+                <div>Disease</div>
+                <input value={recievedPredictionName} disabled={true} type="text" />
+              </Cell>
+            </Row>
+            <Row>
+              <Cell>
+                <div>Disease Description</div>
+                <input
+                  value="Disease Description"
+                  disabled={true}
+                  type="text"
+                />
+              </Cell>
+              <Cell>
+                <div>Additional Comments</div>
+                <textarea
+                  placeholder="Enter additional comments (if any)"
+                  onInput={autoResize}
+                />
+              </Cell>
+            </Row>
+          </FormContainer>
           </ReportContainer>
-        ) : (
-          <div>Loading user data...</div>
-        )}
-        <ButtonContainer>
-          <Button className="secondary-button" onClick={handleCancel}>
-            Cancel
-          </Button>
-          <Button className="primary-button" onClick={handleBookAppointment}>
-            Book Appointment
-          </Button>
-          <Button className="secondary-button" onClick={handlePrint}>
-            Print Report (PDF)
-          </Button>
-        </ButtonContainer>
-      </div>
-      <Footer />
-    </>
-  );
+      ) : (
+        // Render a loading message or spinner while userData is null
+        <div>Loading user data...</div>
+      )}
+      <ButtonContainer>
+        <Button className="secondary-button" onClick={handleCancel}>
+          Cancel
+        </Button>
+        <Button className="primary-button" onClick={handleBookAppointment}>
+          Book Appointment
+        </Button>
+        <Button className="secondary-button" onClick={handlePrint}>
+          Print Report (PDF)
+        </Button>
+      </ButtonContainer>
+    </div>
+    <Footer />
+  </>
+);
+
 }
 
 export default BookAppointment;

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import sign from "../Assets/sign.png";
+import axios from "axios";
 const SignupForm = () => {
   const [formData, setFormData] = useState({
     username: "",
@@ -18,15 +19,34 @@ const SignupForm = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+  
     if (formData.password !== formData.confirmPassword) {
       alert("Passwords do not match");
       return;
     }
-    console.log("Form Data:", formData);
-    alert("Account created successfully!");
+  
+    try {
+      const response = await axios.post("https://9dac-49-205-81-55.ngrok-free.app/signup/", {
+        user: {
+          username: formData.username,
+          password: formData.password,
+        },
+        role: formData.role === "expert" ? true : false,
+        phone_number: formData.phoneNumber,
+      });
+  
+      // Handle success
+      console.log("Response Data:", response.data);
+      alert("Account created successfully!");
+    } catch (error) {
+      // Handle error
+      console.error("Error:", error);
+      alert("An error occurred while creating the account.");
+    }
   };
+  
 
   return (
     <Sign className="page-container">
@@ -76,7 +96,7 @@ const SignupForm = () => {
             <option value="expert">Expert</option>
           </select>
           <div>
-            <Button className="primary-button" type="submit">
+            <Button className="primary-button" type="submit" onClick={handleSubmit}>
               Register
             </Button>
           </div>
