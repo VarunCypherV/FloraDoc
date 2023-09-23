@@ -75,9 +75,10 @@
 // };
 
 // export default DynamicTyping;
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import { PDFDocument, rgb } from 'pdf-lib';
+
+import React, { useState } from "react";
+import styled from "styled-components";
+import { PDFDocument, rgb } from "pdf-lib";
 
 const PrescriptionContainer = styled.div`
   background-color: #fff;
@@ -97,10 +98,9 @@ const PrescriptionTextarea = styled.textarea`
   border: 1px solid #ccc;
   border-radius: 4px;
   resize: none;
-  font-family: 'Courier New', monospace;
+  font-family: "Courier New", monospace;
 `;
 
-// Define a styled component for the button
 const PrescriptionButton = styled.button`
   background-color: #007bff;
   color: #fff;
@@ -137,7 +137,7 @@ const DynamicTyping = () => {
 
     const a = document.createElement("a");
     a.href = url;
-    a.download = "downloaded-text.pdf"; // Set the file name to .pdf
+    a.download = "downloaded-text.pdf";
     a.click();
     URL.revokeObjectURL(url);
   };

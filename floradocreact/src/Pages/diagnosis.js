@@ -37,7 +37,7 @@ const Diagnosis = () => {
         "ngrok-skip-browser-warning": "69420",
         // Content-Type header is not needed here; FormData handles it.
       };
-  
+
       const response = await axios.post(
         "https://9dac-49-205-81-55.ngrok-free.app/prelim/",
         formdatadiag, // Send the FormData directly
@@ -49,7 +49,6 @@ const Diagnosis = () => {
       console.error("Error fetching user data:", error);
     }
   };
-  
 
   const performPrediction = async () => {
     try {

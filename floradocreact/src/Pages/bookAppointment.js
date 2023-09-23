@@ -84,7 +84,7 @@ function BookAppointment() {
     <>
       <Header />
       <div className="page-container">
-        {userData ? ( 
+        {userData ? (
           <>
             <ReportContainer id="report-container">
               <TitleContainer>AI PRELIMINARY DIAGNOSIS</TitleContainer>
@@ -125,7 +125,8 @@ function BookAppointment() {
                 <Row>
                   <Cell>
                     <div>Disease Description</div>
-                    <input
+                    <textarea
+                      
                       value="Disease Description"
                       disabled={true}
                       type="text"
@@ -150,7 +151,6 @@ function BookAppointment() {
             </ButtonContainer>
           </>
         ) : (
-   
           <>
             <TitleContainer>
               Kindly login before using our services!

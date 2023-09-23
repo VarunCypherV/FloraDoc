@@ -1,7 +1,9 @@
 import logo from "../Assets/logo.png";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 
-const footer = () => {
+const Footer = () => {
+  const navigate = useNavigate();
   return (
     <FooterContainer>
       <LogoContainer>
@@ -20,18 +22,43 @@ const footer = () => {
         </FooterCol>
         <FooterCol>
           <FooterHeader>EXPLORE</FooterHeader>
+          <FooterItem onClick={() => navigate("/")}>Home</FooterItem>
+          <FooterItem onClick={() => navigate("/book")}>Services</FooterItem>
+          <FooterItem onClick={() => navigate("/")}>About</FooterItem>
+          <FooterItem onClick={() => navigate("/signup")}>Sign Up</FooterItem>
+          <FooterItem onClick={() => navigate("/signin")}>Sign In</FooterItem>
         </FooterCol>
         <FooterCol>
           <FooterHeader>LET'S CONNECT</FooterHeader>
+          <FooterItem>
+            <a href="https://github.com/SeveralSnipe">Vishwa Kumar S</a>
+          </FooterItem>
+          <FooterItem>
+            <a href="https://github.com/d-man1212">Dharshan S</a>
+          </FooterItem>
+          <FooterItem>
+            <a href="https://github.com/VarunCypherV">Varun Vetrivendan</a>
+          </FooterItem>
+          <FooterItem>
+            <a href="https://github.com/TheDarkKnight-24">
+              Bhavesh Varma Rudraraju
+            </a>
+          </FooterItem>
+          <FooterItem>
+            <a href="https://github.com/pranamyaRK">Pranamya Rajashekhar</a>
+          </FooterItem>
+          <FooterItem>
+            <a href="https://github.com/SuryaSahith">Padala Surya Sahith</a>
+          </FooterItem>
         </FooterCol>
       </FooterCols>
       <Line />
-      <p>Rights not reserved lol</p>
+      <p>&copy; All Rights Reserved</p>
     </FooterContainer>
   );
 };
 
-export default footer;
+export default Footer;
 
 const FooterContainer = styled.div`
   display: flex;
@@ -74,10 +101,6 @@ const FooterCol = styled.div`
   gap: 2em;
   width: 30%;
 `;
-// > p {
-//   margin-top: 0;
-//   margin-bottom: 0;
-// }
 
 const RepoCard = styled.img`
   width: 250px;
@@ -96,4 +119,23 @@ const Line = styled.div`
   background-color: var(--background);
   opacity: 20%;
   margin-top: 1em;
+`;
+
+const FooterItem = styled.div`
+  cursor: pointer;
+  font-size: var(--sub);
+  color: var(--background);
+  width: 100%;
+  white-space: nowrap;
+  background-color: transparent;
+  border-radius: 6px;
+  transition: opacity 0.3s ease;
+  a {
+    color: var(--background);
+    text-decoration: none;
+  }
+  :hover {
+    opacity: 0.6;
+    transition: opacity 0.3s ease;
+  }
 `;
