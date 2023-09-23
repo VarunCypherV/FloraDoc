@@ -68,7 +68,7 @@ const Loginform = () => {
             alt="signin-img"
             style={{ maxHeight: "90%" }}
           />
-          <a onClick = {() => navigate("/signup")}>Don't have an account?</a>
+          <p onClick = {() => navigate("/signup")}>Don't have an account?</p>
         </form>
         <form className="entry">
           <h2>Login</h2>

@@ -26,27 +26,27 @@ const SignupForm = () => {
       alert("Passwords do not match");
       return;
     }
-  
+
     try {
-      const response = await axios.post("https://9dac-49-205-81-55.ngrok-free.app/signup/", {
-        user: {
-          username: formData.username,
-          password: formData.password,
-        },
-        role: formData.role === "expert" ? true : false,
-        phone_number: formData.phoneNumber,
-      });
-  
-      
+      const response = await axios.post(
+        "https://9dac-49-205-81-55.ngrok-free.app/signup/",
+        {
+          user: {
+            username: formData.username,
+            password: formData.password,
+          },
+          role: formData.role === "expert" ? true : false,
+          phone_number: formData.phoneNumber,
+        }
+      );
+
       console.log("Response Data:", response.data);
       alert("Account created successfully!");
     } catch (error) {
-     
       console.error("Error:", error);
       alert("An error occurred while creating the account.");
     }
   };
-  
 
   return (
     <div className="sign page-container">
@@ -96,14 +96,18 @@ const SignupForm = () => {
             <option value="expert">Expert</option>
           </select>
           <div>
-            <div className="primary-button" type="submit" onClick={handleSubmit}>
+            <div
+              className="primary-button"
+              type="submit"
+              onClick={handleSubmit}
+            >
               Register
             </div>
           </div>
         </form>
         <form className="entry">
           <img className="sign-img" src={sign} alt="signup-img" />
-          <a onClick={() => navigate('/signin')}>Already have an account?</a>
+          <p onClick={() => navigate("/signin")}>Already have an account?</p>
         </form>
       </div>
     </div>

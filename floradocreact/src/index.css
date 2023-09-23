@@ -153,11 +153,9 @@ video {
   gap: 1em;
   width: 50%;
   padding: 1em;
-  a {
-    align-self: center;
+  p {
     color: black;
     margin-bottom: 1em;
-
     :hover {
       color: var(--primary);
     }

@@ -41,7 +41,6 @@ const Header = () => {
       <LinkContainer>
         <Link onClick={() => navigate("/")}>Home</Link>
         <Link onClick={() => navigate("/book")}>Services</Link>
-        <Link onClick={() => navigate("/diagnosis")}>Diagnosis</Link>
         <Link onClick={() => navigate("/appointment")}>Appointment</Link>
         {userData ? (
           <LinkContainer>

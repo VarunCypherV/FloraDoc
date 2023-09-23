@@ -3,7 +3,7 @@ import * as tf from "@tensorflow/tfjs";
 import axios from "axios";
 import { useAuth } from "../Context/AuthContext";
 
-const Diagnosis = () => {
+const Diagnosis = ({ onConfirm }) => {
   const { token } = useAuth();
   const canvasRef = useRef(null);
   const videoRef = useRef(null);
@@ -25,26 +25,27 @@ const Diagnosis = () => {
 
   const PrelimPredic = async () => {
     try {
-      console.log(token);
-      console.log(predictionResult);
+      // Make sure predictionResult is defined before using it
+      if (predictionResult) {
+        const formdatadiag = new FormData();
+        formdatadiag.append("diagnosis.disease_tag", predictionResult);
+        formdatadiag.append("image", uploadedImage);
 
-      const formdatadiag = new FormData();
-      formdatadiag.append("diagnosis.disease_tag", predictionResult);
-      formdatadiag.append("image", uploadedImage);
+        const headers = {
+          Authorization: `Token ${token}`,
+          "ngrok-skip-browser-warning": "69420",
+          // Content-Type header is not needed here; FormData handles it.
+        };
 
-      const headers = {
-        Authorization: `Token ${token}`,
-        "ngrok-skip-browser-warning": "69420",
-        // Content-Type header is not needed here; FormData handles it.
-      };
-
-      const response = await axios.post(
-        "https://9dac-49-205-81-55.ngrok-free.app/prelim/",
-        formdatadiag, // Send the FormData directly
-        { headers }
-      );
-
-      console.log("Response data:", response.data);
+        const response = await axios.post(
+          "https://9dac-49-205-81-55.ngrok-free.app/prelim/",
+          formdatadiag, // Send the FormData directly
+          { headers }
+        );
+        onConfirm(response.data);
+      } else {
+        console.error("Prediction result is undefined");
+      }
     } catch (error) {
       console.error("Error fetching user data:", error);
     }
@@ -127,6 +128,9 @@ const Diagnosis = () => {
           const maxIndex = predictions.indexOf(Math.max(...predictions));
 
           setPredictionResult(classLabels[maxIndex]);
+
+          // Pass the prediction result to the parent component
+          // onConfirm(classLabels[maxIndex]);
 
           setIsPredicting(false); // Finish predicting
         };

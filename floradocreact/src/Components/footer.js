@@ -24,7 +24,6 @@ const Footer = () => {
           <FooterHeader>EXPLORE</FooterHeader>
           <FooterItem onClick={() => navigate("/")}>Home</FooterItem>
           <FooterItem onClick={() => navigate("/book")}>Services</FooterItem>
-          <FooterItem onClick={() => navigate("/diagnosis")}>Diagnosis</FooterItem>
           <FooterItem onClick={() => navigate("/appointment")}>Appointment</FooterItem>
           <FooterItem onClick={() => navigate("/signup")}>Sign Up</FooterItem>
           <FooterItem onClick={() => navigate("/signin")}>Sign In</FooterItem>

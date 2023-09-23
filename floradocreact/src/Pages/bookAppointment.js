@@ -19,7 +19,7 @@ function BookAppointment() {
   const { token } = useAuth();
   const [userData, setUserData] = useState(null);
   const [recievedPredictionName, setrecievedPredictionName] = useState("");
- 
+
   const fetchdata = async () => {
     try {
       const response = await axios.get(
@@ -51,9 +51,7 @@ function BookAppointment() {
   };
 
   const handleConfirm = (result) => {
-    
     setrecievedPredictionName(result);
-  
   };
 
   const handlePrint = async () => {
@@ -79,7 +77,6 @@ function BookAppointment() {
     downloadLink.download = "report.pdf";
     downloadLink.click();
   };
-
   return (
     <>
       <Header />
@@ -103,20 +100,21 @@ function BookAppointment() {
                 <Row>
                   <Cell>
                     <CropImage src={logo} alt="Crop Image" />
-                    <Diagnosis
-                      onConfirm={handleConfirm}
-                    />
+                    <Diagnosis onConfirm={handleConfirm} />
                   </Cell>
                 </Row>
                 <Row>
                   <Cell>
                     <div>Crop Name</div>
-                    <input value="Crop" disabled={true} type="text" />
+                    {recievedPredictionName?.data?.diagnosis?.plant || "N/A"}
                   </Cell>
                   <Cell>
                     <div>Disease</div>
                     <textarea
-                      value={recievedPredictionName}
+                      value={
+                        recievedPredictionName?.data?.diagnosis?.disease_name ||
+                        "N/A"
+                      }
                       disabled={true}
                       type="text"
                     />
@@ -126,8 +124,9 @@ function BookAppointment() {
                   <Cell>
                     <div>Disease Description</div>
                     <textarea
-                      
-                      value="Disease Description"
+                      value={
+                        recievedPredictionName?.data?.diagnosis?.report || "N/A"
+                      }
                       disabled={true}
                       type="text"
                     />
