@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import axios from "axios"; // Import Axios
-import { useAuth } from '../Context/AuthContext';
-import { useNavigate } from "react-router-dom"
-
+import axios from "axios";
+import { useAuth } from "../Context/AuthContext";
+import { useNavigate } from "react-router-dom";
+import sign from "../Assets/sign.png";
+import styled from "styled-components";
 const Loginform = () => {
   const { login } = useAuth();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [popupStyle, showPopup] = useState("hide");
 
   const [formData, setFormData] = useState({
@@ -17,22 +17,22 @@ const Loginform = () => {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post("https://9dac-49-205-81-55.ngrok-free.app/api-token-auth/", {
-        username: formData.username,
-        password: formData.password,
-      });
+      const response = await axios.post(
+        "https://9dac-49-205-81-55.ngrok-free.app/api-token-auth/",
+        {
+          username: formData.username,
+          password: formData.password,
+        }
+      );
 
       if (response.status === 200) {
-        const token  = response.data.token;
+        const token = response.data.token;
         login(token);
         setFormData({ ...formData, loginStatus: "Login Successful" });
-        navigate("/book")
+        navigate("/book");
         console.log(token);
-
-
       } else {
         setFormData({ ...formData, loginStatus: "Login Failed" });
-        
       }
     } catch (error) {
       console.error("Login error:", error);
@@ -59,34 +59,54 @@ const Loginform = () => {
   };
 
   return (
-    <div className="cover">
-      <h1>Login</h1>
-      <input
-        type="text"
-        placeholder="Username"
-        value={formData.username}
-        onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        value={formData.password}
-        onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-      />
-
-      <button className="login-btn" onClick={handleLogin}>
-        {formData.loginStatus || "Login"}
-      </button>
-
-      <div className="additional-options">
-        <span>
-          Don't have an account? <Link to="/signup">Sign Up</Link>
-        </span>
-        <br />
-        <span onClick={handleForgotPassword}>Forgot Password</span>
+    <div className="sign page-container">
+      <div className="card">
+        <form className="entry">
+          <img
+            className="sign-img"
+            src={sign}
+            alt="signin-img"
+            style={{ maxHeight: "90%" }}
+          />
+          <a onClick = {() => navigate("/signup")}>Don't have an account?</a>
+        </form>
+        <form className="entry">
+          <h2>Login</h2>
+          <input
+            type="text"
+            placeholder="Username"
+            value={formData.username}
+            onChange={(e) =>
+              setFormData({ ...formData, username: e.target.value })
+            }
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            value={formData.password}
+            onChange={(e) =>
+              setFormData({ ...formData, password: e.target.value })
+            }
+          />
+          <ButtonContainer>
+            <div className="secondary-button" onClick={handleForgotPassword}>
+              Forgot Password
+            </div>
+            <div className="primary-button" onClick={handleLogin}>
+              {formData.loginStatus || "Login"}
+            </div>
+          </ButtonContainer>
+        </form>
       </div>
     </div>
   );
 };
 
 export default Loginform;
+
+const ButtonContainer = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+`;

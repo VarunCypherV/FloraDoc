@@ -124,3 +124,56 @@ video {
   align-items: center;
   margin-bottom: 6em;
 }
+
+.sign{
+  display: flex;
+  flex-direction: column;
+  color: black;
+  background-color: white;
+  padding: 2em;
+  border-radius: 1rem;
+  border: 1px solid rgb(0, 0, 0, 0.2);
+  box-shadow: 0 0 25px 0 rgba(0, 0, 0, 0.3);
+}
+
+.card{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: stretch;
+}
+
+.entry{
+  justify-content: space-between;
+  &:last-child h2{
+    align-self: flex-end;
+  }
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  width: 50%;
+  padding: 1em;
+  a {
+    align-self: center;
+    color: black;
+    margin-bottom: 1em;
+
+    :hover {
+      color: var(--primary);
+    }
+  }
+  input,
+  select {
+    color: black;
+    background-color: transparent;
+    border: none;
+    border-bottom: 1px solid black;
+    padding: 0.5em;
+  }
+}
+
+.sign-img{
+  padding: 2em;
+  object-fit: scale-down;
+  max-width: 100%;
+}

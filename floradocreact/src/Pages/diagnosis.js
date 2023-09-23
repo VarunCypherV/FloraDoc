@@ -12,7 +12,7 @@ const Diagnosis = () => {
   const [cameraStream, setCameraStream] = useState(null);
   const [showCamera, setShowCamera] = useState(false);
   const [snapshot, setSnapshot] = useState(null);
-
+  
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     const imageUrl = URL.createObjectURL(file);
@@ -104,14 +104,15 @@ const Diagnosis = () => {
     initCamera();
   };
 
+
   useEffect(() => {
     const runObjectDetection = async () => {
       // Load your custom TensorFlow.js model
-      console.log("Custom model going to load.");
-      const model = await tf.loadLayersModel(
-        "https://raw.githubusercontent.com/VarunCypherV/FloraDoc/main/Model3/model.json"
-      );
-      console.log("Custom model loaded.");
+
+      console.log('Custom model going to load.');
+      const model = await tf.loadLayersModel('https://raw.githubusercontent.com/VarunCypherV/FloraDoc/main/Model4/model.json');
+      console.log('Custom model loaded.');
+
 
       // If an image has been uploaded or a snapshot is available, proceed with detection
       if (uploadedImage || snapshot) {
@@ -120,12 +121,13 @@ const Diagnosis = () => {
         img.src = uploadedImage || snapshot;
         img.onload = async () => {
           // Ensure the image has the desired dimensions (256x256)
-          const canvas = document.createElement("canvas");
+
+          const canvas = document.createElement('canvas');
           canvas.width = 256;
           canvas.height = 256;
-          const ctx = canvas.getContext("2d");
+          const ctx = canvas.getContext('2d');
           ctx.drawImage(img, 0, 0, 256, 256);
-
+      
           // Convert the canvas to a TensorFlow tensor
           const tensor = tf.browser.fromPixels(canvas);
 
@@ -190,8 +192,8 @@ const Diagnosis = () => {
           // Find the index with the highest probability
           const maxIndex = predictions.indexOf(Math.max(...predictions));
 
-          // Set the predicted class
-          setPredictionResult(classLabels[maxIndex]);
+    // Set the predicted class
+    setPredictionResult(classLabels[maxIndex]);
         };
       }
     };
@@ -206,6 +208,7 @@ const Diagnosis = () => {
 
   return (
     <div>
+
       <input type="file" accept="image/*" onChange={handleImageUpload} />
       {uploadedImage && (
         <img
@@ -251,7 +254,7 @@ const Diagnosis = () => {
       )}
       <button onClick={handleConfirm}>Confirm</button>
       <div>{predictionResult}</div>
-
+      
       <canvas
         ref={canvasRef}
         style={{
