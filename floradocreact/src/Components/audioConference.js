@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import Peer from 'peerjs';
 
 
-function App() {
+function AudioConference() {
   const [peerId, setPeerId] = useState('');
   const [remotePeerIdValue, setRemotePeerIdValue] = useState('');
   const remoteAudioRef = useRef(null);
@@ -64,4 +64,4 @@ function App() {
   );
 }
 
-export default App;
+export default AudioConference;

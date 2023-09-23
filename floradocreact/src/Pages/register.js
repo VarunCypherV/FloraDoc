@@ -1,11 +1,15 @@
 import React from 'react';
-
+import SignupForm from '../Components/signupform';
+import Header from '../Components/header';
+import Footer from '../Components/footer';
 function Register() {
 
   return (
-    <div>
-      {/* JSX content goes here */}
-    </div>
+    <>
+      <Header />
+      <SignupForm/>
+      <Footer />
+    </>
   );
 }
 

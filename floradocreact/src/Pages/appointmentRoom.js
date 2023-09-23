@@ -8,10 +8,10 @@ function AppointmentRoom() {
 
   return (
     <div>
-      {/* <DynamicTyping/> */}
+      <DynamicTyping/>
       <ChatRoom/>
-      {/* <AudioConference/>
-      <VideoConference/> */}
+      <AudioConference/>
+      <VideoConference/>
     </div>
   );
 }

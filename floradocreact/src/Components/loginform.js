@@ -1,21 +1,43 @@
-import React, { useEffect, useState } from "react";
-import "./loginform.css";
-import GoogleLogin from "react-google-login";
-import { gapi } from "gapi-script";
-
+import React, { useState } from "react";
+import axios from "axios";
+import { useAuth } from "../Context/AuthContext";
+import { useNavigate } from "react-router-dom";
+import sign from "../Assets/sign.png";
+import styled from "styled-components";
 const Loginform = () => {
-
-    useEffect(() => {
-        function start() {
-            gapi.client.init({
-                clientId: "79474543031-tmjo35916ufn421ej3u1i2ljao2apr4s.apps.googleusercontent.com",
-                scope: ""
-            })
-        }
-        gapi.load('client: auth2', start)
-    })
-
+  const { login } = useAuth();
+  const navigate = useNavigate();
   const [popupStyle, showPopup] = useState("hide");
+
+  const [formData, setFormData] = useState({
+    username: "",
+    password: "",
+    loginStatus: "",
+  });
+
+  const handleLogin = async () => {
+    try {
+      const response = await axios.post(
+        "https://9dac-49-205-81-55.ngrok-free.app/api-token-auth/",
+        {
+          username: formData.username,
+          password: formData.password,
+        }
+      );
+
+      if (response.status === 200) {
+        const token = response.data.token;
+        login(token);
+        setFormData({ ...formData, loginStatus: "Login Successful" });
+        navigate("/book");
+        console.log(token);
+      } else {
+        setFormData({ ...formData, loginStatus: "Login Failed" });
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+    }
+  };
 
   const popup = () => {
     showPopup("login-popup");
@@ -28,55 +50,63 @@ const Loginform = () => {
   };
 
   const onFailure = (e) => {
-    alert("User sign in Failed");
+    alert("User sign-in Failed");
     console.log(e);
   };
 
   const handleForgotPassword = () => {
     const phoneNumber = prompt("Please enter your mobile number:");
-    // Here, you can implement logic to send OTP and handle redirection
-    // based on OTP verification.
   };
 
   return (
-    <div className="cover">
-      <h1>Login</h1>
-      <input type="text" placeholder="Username" />
-      <input type="password" placeholder="Password" />
-      <input type="tel" placeholder="Phone Number" />
-      <input type="text" placeholder="Role" />
-
-      <div className="login-btn" onClick={popup}>
-        Login
-      </div>
-
-      <p className="text">Or login using</p>
-
-      <div className="alt-login">
-        <div className="facebook"></div>
-        <div className="google">
-          <GoogleLogin
-            className="blue"
-            clientId="79474543031-tmjo35916ufn421ej3u1i2ljao2apr4s.apps.googleusercontent.com"
-            buttonText=""
-            onSuccess={onSuccess}
-            onFailure={onFailure}
-            cookiePolicy={"single_host_origin"}
-            isSignedIn={false}
-            icon={false}
-            theme="dark"
+    <div className="sign page-container">
+      <div className="card">
+        <form className="entry">
+          <img
+            className="sign-img"
+            src={sign}
+            alt="signin-img"
+            style={{ maxHeight: "90%" }}
           />
-        </div>
-      </div>
-
-      <div className="additional-options">
-        <span onClick={() => alert("Redirect to Sign Up page")}>
-          Don't have an account? Sign In
-        </span><br/>
-        <span onClick={handleForgotPassword}>Forgot Password</span>
+          <a onClick = {() => navigate("/signup")}>Don't have an account?</a>
+        </form>
+        <form className="entry">
+          <h2>Login</h2>
+          <input
+            type="text"
+            placeholder="Username"
+            value={formData.username}
+            onChange={(e) =>
+              setFormData({ ...formData, username: e.target.value })
+            }
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            value={formData.password}
+            onChange={(e) =>
+              setFormData({ ...formData, password: e.target.value })
+            }
+          />
+          <ButtonContainer>
+            <div className="secondary-button" onClick={handleForgotPassword}>
+              Forgot Password
+            </div>
+            <div className="primary-button" onClick={handleLogin}>
+              {formData.loginStatus || "Login"}
+            </div>
+          </ButtonContainer>
+        </form>
       </div>
     </div>
   );
 };
 
 export default Loginform;
+
+const ButtonContainer = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+`;
