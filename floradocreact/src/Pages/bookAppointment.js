@@ -19,12 +19,7 @@ function BookAppointment() {
   const { token } = useAuth();
   const [userData, setUserData] = useState(null);
   const [recievedPredictionName, setrecievedPredictionName] = useState("");
-  const [uploadedImage, setUploadedImage] = useState(null);
-
-  const handleImageUpload = (image) => {
-    setUploadedImage(image);
-  };
-
+ 
   const fetchdata = async () => {
     try {
       const response = await axios.get(
@@ -47,12 +42,6 @@ function BookAppointment() {
     fetchdata();
   }, []);
 
-  const autoResize = () => {
-    const textarea = document.querySelector("textarea");
-    textarea.style.height = "auto";
-    textarea.style.height = textarea.scrollHeight + "px";
-  };
-
   const handleBookAppointment = () => {
     alert("Appointment booked!");
   };
@@ -60,33 +49,9 @@ function BookAppointment() {
   const handleCancel = () => {
     alert("Appointment cancelled.");
   };
-  const PrelimPredic = async () => {
-    try {
-      console.log(token);
 
-
-      const response = await axios.post(
-        "https://9dac-49-205-81-55.ngrok-free.app/prelim/",
-        {
-          diagnosis: {
-            disease_tag: recievedPredictionName,
-          },
-          image: uploadedImage,
-        },
-        {
-          headers: {
-            Authorization: `Token ${token}`,
-            "ngrok-skip-browser-warning": "69420",
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-    } catch (error) {
-      console.error("Error fetching user data:", error);
-    }
-  };
   const handleConfirm = (result) => {
- 
+    
     setrecievedPredictionName(result);
   
   };
@@ -138,10 +103,9 @@ function BookAppointment() {
                 <Row>
                   <Cell>
                     <CropImage src={logo} alt="Crop Image" />
-                    {/* <Diagnosis
+                    <Diagnosis
                       onConfirm={handleConfirm}
-                      onImageUpload={handleImageUpload}
-                    /> */}
+                    />
                   </Cell>
                 </Row>
                 <Row>

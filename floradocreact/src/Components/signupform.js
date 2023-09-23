@@ -22,7 +22,6 @@ const SignupForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
     if (formData.password !== formData.confirmPassword) {
       alert("Passwords do not match");
       return;
@@ -38,11 +37,11 @@ const SignupForm = () => {
         phone_number: formData.phoneNumber,
       });
   
-      // Handle success
+      
       console.log("Response Data:", response.data);
       alert("Account created successfully!");
     } catch (error) {
-      // Handle error
+     
       console.error("Error:", error);
       alert("An error occurred while creating the account.");
     }
