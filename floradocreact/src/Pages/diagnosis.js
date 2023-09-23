@@ -3,7 +3,7 @@ import * as tf from "@tensorflow/tfjs";
 import axios from "axios";
 import { useAuth } from "../Context/AuthContext";
 
-const Diagnosis = () => {
+const Diagnosis = ({ onConfirm }) => {
   const { token } = useAuth();
   const canvasRef = useRef(null);
   const videoRef = useRef(null);
@@ -25,8 +25,6 @@ const Diagnosis = () => {
 
   const PrelimPredic = async () => {
     try {
-      console.log(token);
-      console.log(predictionResult);
   
       const formdatadiag = new FormData();
       formdatadiag.append("diagnosis.disease_tag", predictionResult);
@@ -43,8 +41,8 @@ const Diagnosis = () => {
         formdatadiag, // Send the FormData directly
         { headers }
       );
-  
-      console.log("Response data:", response.data);
+      onConfirm(response.data);
+     
     } catch (error) {
       console.error("Error fetching user data:", error);
     }
@@ -56,7 +54,7 @@ const Diagnosis = () => {
       const model = await tf.loadLayersModel(
         "https://raw.githubusercontent.com/VarunCypherV/FloraDoc/main/Model4/model.json"
       );
-
+  
       if (imageURL || snapshot) {
         const img = new Image();
         img.src = imageURL || snapshot;
@@ -65,69 +63,70 @@ const Diagnosis = () => {
           canvas.width = 256;
           canvas.height = 256;
           const ctx = canvas.getContext("2d");
-
+  
           ctx.drawImage(img, 0, 0, 256, 256);
-
+  
           const tensor = tf.browser.fromPixels(canvas);
-
+  
           const normalizedImage = tensor.div(255.0);
-
+  
           const inputTensor = normalizedImage.expandDims(0);
         
           const predictions = await model.predict(inputTensor).data();
-     
-          const classLabels = [
-            "Applehealthy",
-            "Applerust",
-            "Applescab",
-            "Apple_black_rot",
-            "Corncommon_rust",
-            "Corngray_leaf_spot",
-            "Cornhealthy",
-            "Cornnorthern_leaf_blight",
-            "Grapeblack_measles",
-            "Grapeblack_rot",
-            "Grapehealthy",
-            "Grapeleaf_blight",
-            "Potatoearly_blight",
-            "Potatohealthy",
-            "Potatolate_blight",
-            "Ricebrown_spot",
-            "Ricehispa",
-            "Riceleaf_blast",
-            "Riceneck_blast",
-            "Rice_healthy",
-            "Sugarcanebacterial_blight",
-            "Sugarcanehealthy",
-            "Sugarcanered_rot",
-            "Sugarcanered_stripe",
-            "Sugarcanerust",
-            "Teaalgal_leaf",
-            "Teaanthracnose",
-            "Teabird_eye_spot",
-            "Teabrown_blight",
-            "Teahealthy",
-            "Teared_leaf_spot",
-            "Tomatobacterial_spot",
-            "Tomatoearly_blight",
-            "Tomatohealthy",
-            "Tomatolate_blight",
-            "Tomatoleaf_mold",
-            "Tomatomosaic_virus",
-            "Tomatoseptoria_leaf_spot",
-            "Tomatospider_mites",
-            "Tomatotarget_spot",
-            "Tomatoyellow_leaf_curl_virus",
-            "Wheatbrown_rust",
-            "Wheathealthy",
-            "Wheatseptoria",
-            "Wheat__yellow_rust",
-          ];
-
+   
+          const classLabels = ['Applehealthy',
+          'Applerust',
+          'Applescab',
+          'Apple_black_rot',
+          'Corncommon_rust',
+          'Corngray_leaf_spot',
+          'Cornhealthy',
+          'Cornnorthern_leaf_blight',
+          'Grapeblack_measles',
+          'Grapeblack_rot',
+          'Grapehealthy',
+          'Grapeleaf_blight',
+          'Potatoearly_blight',
+          'Potatohealthy',
+          'Potatolate_blight',
+          'Ricebrown_spot',
+          'Ricehispa',
+          'Riceleaf_blast',
+          'Riceneck_blast',
+          'Rice_healthy',
+          'Sugarcanebacterial_blight',
+          'Sugarcanehealthy',
+          'Sugarcanered_rot',
+          'Sugarcanered_stripe',
+          'Sugarcanerust',
+          'Teaalgal_leaf',
+          'Teaanthracnose',
+          'Teabird_eye_spot',
+          'Teabrown_blight',
+          'Teahealthy',
+          'Teared_leaf_spot',
+          'Tomatobacterial_spot',
+          'Tomatoearly_blight',
+          'Tomatohealthy',
+          'Tomatolate_blight',
+          'Tomatoleaf_mold',
+          'Tomatomosaic_virus',
+          'Tomatoseptoria_leaf_spot',
+          'Tomatospider_mites',
+          'Tomatotarget_spot',
+          'Tomatoyellow_leaf_curl_virus',
+          'Wheatbrown_rust',
+          'Wheathealthy',
+          'Wheatseptoria',
+          'Wheat__yellow_rust'];
+  
           const maxIndex = predictions.indexOf(Math.max(...predictions));
-
+  
           setPredictionResult(classLabels[maxIndex]);
   
+          // Pass the prediction result to the parent component
+          // onConfirm(classLabels[maxIndex]);
+          
           setIsPredicting(false); // Finish predicting
         };
       }
@@ -136,6 +135,7 @@ const Diagnosis = () => {
       console.error("Error predicting:", error);
     }
   };
+  
 
   const handleConfirm = async (e) => {
     e.preventDefault();
