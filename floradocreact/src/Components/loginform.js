@@ -61,14 +61,14 @@ const Loginform = () => {
   return (
     <div className="sign page-container">
       <div className="card">
-        <form className="entry">
+        <form className="entry" style={{ alignItems: "center" }}>
           <img
             className="sign-img"
             src={sign}
             alt="signin-img"
             style={{ maxHeight: "90%" }}
           />
-          <p onClick = {() => navigate("/signup")}>Don't have an account?</p>
+          <p onClick={() => navigate("/signup")}>Don't have an account?</p>
         </form>
         <form className="entry">
           <h2>Login</h2>

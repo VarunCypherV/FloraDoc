@@ -105,7 +105,7 @@ const SignupForm = () => {
             </div>
           </div>
         </form>
-        <form className="entry">
+        <form className="entry" style={{ alignItems: "center" }}>
           <img className="sign-img" src={sign} alt="signup-img" />
           <p onClick={() => navigate("/signin")}>Already have an account?</p>
         </form>
